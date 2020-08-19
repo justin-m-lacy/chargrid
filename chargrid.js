@@ -22,6 +22,8 @@ const CHAR_END = 90;
 
 export class CharGrid {
 
+	get allowReverse(){return this._allowReverse}
+
 	/**
 	 * @property {string[][]}
 	 */
@@ -94,31 +96,6 @@ export class CharGrid {
 		for( let i = 0; i < len; i++ ) {
 
 			a[r][c] = char;
-			r += dr;
-			c += dc;
-
-		}
-
-	}
-
-	/**
-	 * Fill chars starting at [row,col], stepping in the direction dr,dc for each letter,
-	 * until are letters are used.
-	 * Validate data before calling.
-	 * @param {number} r
-	 * @param {number} c
-	 * @param {number} dr - row step to use per letter.
-	 * @param {number} dc - col step to use per letter.
-	 * @param {string} word
-	 */
-	_setChars( r, c, dr, dc, word ) {
-
-		let len = word.length;
-		let a = this._chars;
-
-		for( let i = 0; i < len; i++ ) {
-
-			a[r][c] = word[i];
 			r += dr;
 			c += dc;
 
@@ -307,7 +284,7 @@ export class CharGrid {
 	 */
 	putColWord( word, row, col, mustMatch=false ){
 
-		if ( !this.canPutCol( word, row, col, mustMatch) ) return false;
+		if ( !this._canPutChars( word, row, col, 1, 0, mustMatch) ) return false;
 
 		let wordLen = word.length;
 		for( let i  = 0; i <wordLen; i++ ) {
@@ -320,47 +297,62 @@ export class CharGrid {
 	}
 
 	canPutRow( word, r, c, mustMatch=false ) {
+		return this._canPutChars( word, r, c, 0, 1, mustMatch);
+	}
 
-		if ( r < 0 || r >= this._rows ) return false;
+	canPutCol( word, r, c, mustMatch=false ) {
+		return this._canPutChars( word, r, c, 1, 0, mustMatch);
+	}
 
-		let wordLen = word.length;
-		if ( c < 0 || c + wordLen > this._cols ) return false;
+	_canPutChars( word, r, c, rDir, cDir, mustMatch=false ) {
 
-		let a = this._chars[r];
-		if ( mustMatch ) {
+		let len = word.length;
 
-			// check char conflicts.
-			for( let i = 0; i <wordLen;i++ ) {
-				if ( a[c] != null && a[c] != word[i] ) return false;
-				c++;
+		let endR = r+rDir*len;
+		let endC = c+cDir*len;
+
+		if ( r < 0 || r >= this._rows || endR < 0 || endR > this._rows ) return false;
+		if ( c < 0 || c >= this._cols || endC < 0 || endC > this._cols ) return false;
+
+		if ( mustMatch) {
+
+			let a = this._chars;
+			for( let i = 0; i < len; i++ ) {
+
+				let chr = a[r][c];
+				if ( chr != null && chr != word[i]) return false;
+				r += rDir;
+				c += cDir;
+
 			}
 
 		}
-
 		return true;
 
 	}
 
-	canPutCol( word, r, c, mustMatch=false ) {
+	/**
+	 * Fill chars starting at [row,col], stepping in the direction dr,dc for each letter,
+	 * until are letters are used.
+	 * Validate data before calling.
+	 * @param {string} word
+	 * @param {number} r
+	 * @param {number} c
+	 * @param {number} dr - row step to use per letter.
+	 * @param {number} dc - col step to use per letter.
+	 */
+	_setChars( word, r, c, dr, dc ) {
 
-		if ( c < 0 || c >= this._cols ) return false;
+		let len = word.length;
+		let a = this._chars;
 
-		let wordLen = word.length;
-		if ( r < 0 || r + wordLen > this._rows ) return false;
+		for( let i = 0; i < len; i++ ) {
 
-		if ( mustMatch ) {
-
-			for( let i = 0; i < wordLen; i++ ) {
-
-				let chr = this._chars[r][c];
-				if ( chr != null && chr != word[i]) return false;
-				r++;
-
-			}
+			a[r][c] = word[i];
+			r += dr;
+			c += dc;
 
 		}
-
-		return true;
 
 	}
 
