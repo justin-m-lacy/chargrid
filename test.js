@@ -1,12 +1,27 @@
 import { WordSearch } from "./wordsearch/wordsearch";
 
-const smallList = [
+/**
+ * @const {small|med|large} size - size of test.
+ */
+const size = 'med'
+
+const Sizes = {
+
+	small:10,
+	med:15,
+	large:20
+
+}
+
+const Lists = {
+
+	small:[
 	'cat',
 	'dog',
 	'street'
-];
+	],
 
-const medList = [
+	med:[
 
 	'cat',
 	'amphibian',
@@ -19,13 +34,13 @@ const medList = [
 	'density',
 	'pidgeon',
 	'keyboard',
+	'diagonal',
+	'fissure',
 	'zebra',
 	'yellow',
-	'walrus'
+	'walrus'],
 
-];
-
-const longList = [
+	large: [
 
 	'cat',
 	'amphibian',
@@ -34,12 +49,26 @@ const longList = [
 	'cataract',
 	'persiflage',
 	'mendacious',
+	'radiant',
+	'bellowing',
+	'numinous',
+	'vagrant',
 	'bedroom',
 	'chair',
 	'obscure',
 	'confiscate',
+	'lion',
+	'masticate',
+	'leg',
+	'arm',
+	'backpack',
+	'idle',
 	'dilemma',
 	'computer',
+	'kitten',
+	'puppy',
+	'duck',
+	'alligator',
 	'program',
 	'density',
 	'pidgeon',
@@ -49,14 +78,30 @@ const longList = [
 	'eyeball',
 	'zenith',
 	'walrus',
+	'potato',
+	'meager',
+	'visceral',
+	'clandestine',
+	'nothing',
+	'universe',
+	'blank',
+	'mashed',
+	'boil',
+	'stew',
 	'monitor',
 	'lizard',
+	'vertigo',
+	'alpha',
+	'math',
+	'integral',
+	'addition',
 	'purple',
 	'liquid',
 	'sky',
 	'a'
+	]
 
-];
+};
 
 console.log('RUNNING TEST');
 
@@ -65,10 +110,13 @@ searchTest();
 function searchTest() {
 
 	console.log('Creating Search');
-	let search = new WordSearch( 14, 14 );
 
-	search.placeAndFill( longList );
+	let gridSize = Sizes[size];
+	let list = Lists[size];
+	let search = new WordSearch( gridSize, gridSize );
 
-	//console.log( search.toString() );
+	search.placeAndFill( list );
+
+	console.log( search.toString() );
 
 }

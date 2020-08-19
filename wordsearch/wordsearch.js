@@ -23,7 +23,7 @@ export class WordSearch extends CharGrid {
 	 */
 	placeWords( words ) {
 
-		let testNum = 2;
+		let testNum = 1;
 		let testName = 'PLACe TEST: ' + testNum;
 		let placeFunc = this['placeWord'+testNum];
 
