@@ -1,0 +1,12 @@
+{
+  "name": "wordgrid",
+  "type":"module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --experimental-modules --es-module-specifier-resolution=node test.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
