@@ -111,17 +111,31 @@ export class CharGrid {
 	placeWord( word ) {
 
 		let wordLen = word.length;
-		let revWord = strReverse(word);
+
+		let firstTry = word;
+		let nextTry = strReverse(word);
+
+		if ( Math.random() < REVERSE_RATE ) {
+
+			console.log('TRY REVERSE: ' + word );
+			firstTry = nextTry;
+			nextTry = word;
+
+		}
 
 		if ( Math.random() < 0.5 ) {
 
-			if ( this.tryRowPlace( word, true ) ) return true;
-			if ( this.tryColPlace( word, true ) ) return true;
+			if ( this.tryRowPlace( firstTry, true ) ) return true;
+			if ( this.tryColPlace( firstTry, true ) ) return true;
+			if ( this.tryRowPlace( nextTry, true ) ) return true;
+			if ( this.tryColPlace( nextTry, true ) ) return true;
 
 		} else {
 
-			if ( this.tryColPlace( word, true ) ) return true;
-			if ( this.tryRowPlace( word, true ) ) return true;
+			if ( this.tryColPlace( firstTry, true ) ) return true;
+			if ( this.tryRowPlace( firstTry, true ) ) return true;
+			if ( this.tryColPlace( nextTry, true ) ) return true;
+			if ( this.tryRowPlace( nextTry, true ) ) return true;
 
 		}
 
