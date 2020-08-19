@@ -17,8 +17,19 @@ export const PAD_CHAR = ' ';
  */
 const REVERSE_RATE = 0.4;
 
-const CHAR_START = 65;
-const CHAR_END = 90;
+/**
+ * @const {object[]} directions - directions for placing words.
+ * Negative directions aren't included since the word can
+ * simply be placed in reverse instead.
+ */
+const directions = [
+
+	{dr:1, dc:0},
+	{dr:0, dc:1},
+	{dr:1, dc:1},
+	{dr:1, dc:-1}
+
+];
 
 export class CharGrid {
 
@@ -123,19 +134,61 @@ export class CharGrid {
 
 		}
 
-		if ( Math.random() < 0.5 ) {
+		// randomize placement directions.
+		// this is done so fallback directions aren't chosen in same order.
+		this.randDirs( directions );
 
-			if ( this.tryRowPlace( firstTry, true ) ) return true;
-			if ( this.tryColPlace( firstTry, true ) ) return true;
-			if ( this.tryRowPlace( nextTry, true ) ) return true;
-			if ( this.tryColPlace( nextTry, true ) ) return true;
+		for( let i = directions.length-1; i >= 0; i-- ) {
 
-		} else {
+			let dir = directions[i];
+			if ( this.tryDirPlace( nextTry, dir, true )) return true;
+			if ( this.tryDirPlace( firstTry, dir, true )) return true;
 
-			if ( this.tryColPlace( firstTry, true ) ) return true;
-			if ( this.tryRowPlace( firstTry, true ) ) return true;
-			if ( this.tryColPlace( nextTry, true ) ) return true;
-			if ( this.tryRowPlace( nextTry, true ) ) return true;
+		}
+
+		return false;
+
+	}
+
+	/**
+	 * Randomize direction array.
+	 */
+	randDirs( a ){
+
+		let len = a.length;
+
+		for( let i = len; i >= 0; i-- ) {
+
+			let ind1 = Math.floor( len*Math.random() );
+			let ind2 = Math.floor( len*Math.random() );
+
+			let e1 = a[ind1];
+			a[ind1] = a[ind2];
+			a[ind2] = e1;
+
+		}
+
+	}
+
+	tryDirPlace( word, dir, mustMatch=false ) {
+
+		let dr = dir.dr;
+		let dc = dir.dc;
+
+		let r = randInt( 0, this._rows );
+		let c = randInt(0, this._cols );
+
+		let maxTries = this._rows*this._cols;
+
+		while( maxTries-- > 0 ) {
+
+			if ( this.tryPutWord( word, r,c, dr, dc, mustMatch ) ) return true;
+			// @note advancement of r,c here has nothing to do with direction.
+			// It is just attempting to place the word at every grid space.
+			if ( ++c>= this._cols ) {
+				c = 0;
+				if ( ++r >= this._rows) r=0;
+			}
 
 		}
 
@@ -151,7 +204,7 @@ export class CharGrid {
 	 */
 	tryRowPlace( word, mustMatch=false ) {
 
-		console.log('Try place row: ' + word );
+		//console.log('Try place row: ' + word );
 
 		if ( word.length === 0 ) return false;
 
@@ -174,7 +227,7 @@ export class CharGrid {
 			let colTries = maxCol;
 			while ( colTries-- > 0 ) {
 
-				if ( this.putRowWord( word, r, c, mustMatch ) ) {
+				if ( this.tryPutRow( word, r, c, mustMatch ) ) {
 					return true;
 				}
 				if ( ++c >= maxCol ) c = 0;
@@ -220,7 +273,7 @@ export class CharGrid {
 			let rowTries = maxRow;
 			while ( rowTries-- > 0 ) {
 
-				if ( this.putColWord( word, r, c, mustMatch ) ) {
+				if ( this.tryPutCol( word, r, c, mustMatch ) ) {
 					return true;
 				}
 				if ( ++r >= maxRow ) r = 0;
@@ -236,35 +289,19 @@ export class CharGrid {
 	}
 
 	/**
-	 * Attempt to add a word to the grid, but fail on any conflict
-	 * with an existing char already in the grid.
+	 * Attempt to place word on a diagonal ( forward or backward.)
 	 * @param {string} word
-	 * @param {number} row
-	 * @param {number} col
-	 * @param {boolean} vertical
-	 * @returns {boolean}
+	 * @param {boolean} mustMatch
 	 */
-	tryPutWord( word, row, col, vertical=false ) {
-
-		if ( vertical ) return this.putColWord( word, row, col, true );
-		else return this.putRowWord( word, row, col, true );
+	/*tryDiagonalPlace( word, mustMatch=false) {
 
 	}
 
-	/**
-	 *
-	 * @param {string} word
-	 * @param {number} row
-	 * @param {number} col
-	 * @param {boolean} [vertical=false]
-	 * @returns {boolean} false if word doesn't fit.
-	 */
-	addWord( word, row, col, vertical=false ){
-
-		if ( vertical ) return this.putColWord( word, row, col );
-		else return this.putRowWord( word, row, col );
-
+	tryFowardDiagonal(word, mustMatch=false) {
 	}
+
+	tryBackwardDiagonal(word,mustMatch=false ) {
+	}*/
 
 	/**
 	 *
@@ -274,7 +311,7 @@ export class CharGrid {
 	 * @param {boolean} mustMatch
 	 * @returns {boolean}
 	 */
-	putRowWord( word, r, c, mustMatch=false ) {
+	tryPutRow( word, r, c, mustMatch=false ) {
 
 		if (!this.canPutRow( word, r, c, mustMatch) ) return false;
 
@@ -296,9 +333,9 @@ export class CharGrid {
 	 * @param {boolean} mustMatch
 	 * @returns {boolean} false if word won't fit.
 	 */
-	putColWord( word, row, col, mustMatch=false ){
+	tryPutCol( word, row, col, mustMatch=false ){
 
-		if ( !this._canPutChars( word, row, col, 1, 0, mustMatch) ) return false;
+		if ( !this.canPutWord( word, row, col, 1, 0, mustMatch) ) return false;
 
 		let wordLen = word.length;
 		for( let i  = 0; i <wordLen; i++ ) {
@@ -310,15 +347,43 @@ export class CharGrid {
 
 	}
 
+	/**
+	 * Attempt to place word with a given orientation. (dr,dc)
+	 * @param {string} word
+	 * @param {number} r
+	 * @param {number} c
+	 * @param {0|-1|1} dr
+	 * @param {0|-1|1} dc
+	 * @param {boolean} mustMatch
+	 */
+	tryPutWord( word, r, c, dr, dc, mustMatch=false ) {
+
+		if ( !this.canPutWord(word, r, c, dr, dc, mustMatch ) ) return false;
+		this._setChars( word,r,c,dr,dc );
+
+		return true;
+
+	}
+
 	canPutRow( word, r, c, mustMatch=false ) {
-		return this._canPutChars( word, r, c, 0, 1, mustMatch);
+		return this.canPutWord( word, r, c, 0, 1, mustMatch);
 	}
 
 	canPutCol( word, r, c, mustMatch=false ) {
-		return this._canPutChars( word, r, c, 1, 0, mustMatch);
+		return this.canPutWord( word, r, c, 1, 0, mustMatch);
 	}
 
-	_canPutChars( word, r, c, rDir, cDir, mustMatch=false ) {
+	/**
+	 *
+	 * @param {string} word
+	 * @param {number} r
+	 * @param {number} c
+	 * @param {1|-1|0} rDir
+	 * @param {1|-1|0} cDir
+	 * @param {boolean} [mustMatch=false]
+	 * @returns {boolean} true if word can be safely placed.
+	 */
+	canPutWord( word, r, c, rDir, cDir, mustMatch=false ) {
 
 		let len = word.length;
 
@@ -352,8 +417,8 @@ export class CharGrid {
 	 * @param {string} word
 	 * @param {number} r
 	 * @param {number} c
-	 * @param {number} dr - row step to use per letter.
-	 * @param {number} dc - col step to use per letter.
+	 * @param {1|-1|0} dr - row step to use per letter.
+	 * @param {1|-1|0} dc - col step to use per letter.
 	 */
 	_setChars( word, r, c, dr, dc ) {
 
