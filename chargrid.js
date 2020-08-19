@@ -128,7 +128,6 @@ export class CharGrid {
 
 		if ( Math.random() < REVERSE_RATE ) {
 
-			console.log('TRY REVERSE: ' + word );
 			firstTry = nextTry;
 			nextTry = word;
 

@@ -36,7 +36,7 @@ function searchTest() {
 
 	console.log('Placing words.');
 
-	search.placeAndFill( smallList );
+	search.placeAndFill( medList );
 
 	console.log( search.toString() );
 

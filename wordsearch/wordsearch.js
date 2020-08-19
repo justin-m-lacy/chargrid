@@ -25,12 +25,14 @@ export class WordSearch extends CharGrid {
 
 		if ( !Array.isArray(words) ) throw new Error('Words must be array.');
 
+		// fit large words first.
+		let arr = words.concat().sort((a,b)=>a.length-b.length);
 		let unused = [];
 
-		for( let i = words.length-1; i >= 0; i-- ) {
+		for( let i = arr.length-1; i >= 0; i-- ) {
 
-			if ( !this.placeWord( words[i] ) ) {
-				unused.push(words[i]);
+			if ( !this.placeWord( arr[i] ) ) {
+				unused.push(arr[i]);
 			}
 		}
 
