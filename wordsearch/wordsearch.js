@@ -23,6 +23,12 @@ export class WordSearch extends CharGrid {
 	 */
 	placeWords( words ) {
 
+		let testNum = 2;
+		let testName = 'PLACe TEST: ' + testNum;
+		let placeFunc = this['placeWord'+testNum];
+
+		console.time( testName );
+
 		if ( !Array.isArray(words) ) throw new Error('Words must be array.');
 
 		// fit large words first.
@@ -31,10 +37,12 @@ export class WordSearch extends CharGrid {
 
 		for( let i = arr.length-1; i >= 0; i-- ) {
 
-			if ( !this.placeWord( arr[i] ) ) {
+			if ( !placeFunc.call(this, arr[i] ) ) {
 				unused.push(arr[i]);
 			}
 		}
+
+		console.timeEnd( testName );
 
 		console.log('Words Unused: ' + unused.length );
 

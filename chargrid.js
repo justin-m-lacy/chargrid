@@ -1,4 +1,4 @@
-import { randInt, strReverse } from "./util/util";
+import { randInt, strReverse, rand } from "./util/util";
 
 const RandChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -114,14 +114,14 @@ export class CharGrid {
 
 	}
 
-	/**
+		/**
 	 * Attempt to place a word randomly in the grid.
 	 * @param {string} word
 	 * @returns {boolean} true on success. false on failure.
 	 */
-	placeWord( word ) {
+	placeWord1( word ) {
 
-		let wordLen = word.length;
+		if ( word.length > this._rows && word.length> this._cols ) return false;
 
 		let firstTry = word;
 		let nextTry = strReverse(word);
@@ -135,13 +135,105 @@ export class CharGrid {
 
 		// randomize placement directions.
 		// this is done so fallback directions aren't chosen in same order.
-		this.randDirs( directions );
+		//this.randDirs( directions );
 
-		for( let i = directions.length-1; i >= 0; i-- ) {
+		let numDirs = directions.length;
+		let i = rand( numDirs );
+		let dirTries = numDirs;
 
-			let dir = directions[i];
-			if ( this.tryDirPlace( nextTry, dir, true )) return true;
-			if ( this.tryDirPlace( firstTry, dir, true )) return true;
+		while ( dirTries-- > 0 ) {
+
+			if ( this.tryDirPlace( firstTry, directions[i], true )) return true;
+			if ( this.tryDirPlace( nextTry, directions[i], true )) return true;
+
+			if ( ++i >= numDirs ) i =0;
+
+		}
+
+		return false;
+
+	}
+
+
+	/**
+	 * Attempt to place a word randomly in the grid.
+	 * @param {string} word
+	 * @returns {boolean} true on success. false on failure.
+	 */
+	placeWord2( word ) {
+
+		if ( word.length > this._rows && word.length > this._cols ) return false;
+
+		let firstTry = word;
+		let nextTry = strReverse(word);
+
+		if ( Math.random() < REVERSE_RATE ) {
+
+			firstTry = nextTry;
+			nextTry = word;
+
+		}
+
+		// start placing at random position.
+		let r = rand( this._rows );
+		let c = rand( this._cols );
+
+		let maxTries = this._rows*this._cols;
+		while ( maxTries-- > 0 ) {
+
+			if ( this.tryDirections(firstTry,r,c,true) ) return true;
+			if ( this.tryDirections(nextTry,r,c,true) ) return true;
+
+			if ( ++c>= this._cols ) {
+				c = 0;
+				if ( ++r >= this._rows) r=0;
+			}
+
+		}
+
+		return false;
+
+	}
+
+	/**
+	 * Try placing a word at row,col in any possible direction.
+	 * @param {*} word
+	 * @param {*} r
+	 * @param {*} c
+	 * @param {*} mustMatch
+	 */
+	tryDirections( word, r, c, mustMatch=false ){
+
+		let numDirs = directions.length;
+		let wordLen = word.length;
+		let ind = rand( numDirs );
+		let dirTries = numDirs;
+
+		while ( dirTries-- > 0 ) {
+
+			let dir = directions[ind];
+			if ( ++ind >= numDirs ) ind =0;
+
+			let {dr,dc } = dir;
+
+			if ( dr > 0 ) {
+				if ( r+wordLen>this._rows ) continue;
+			}
+			else if ( dr<0 ){
+				if ( r+1-wordLen<0) continue;
+			}
+			if ( dc > 0 ) {
+				if ( c+wordLen>this._cols ) continue;
+			}
+			else if ( dc<0 ){
+				if ( c+1-wordLen<0) continue;
+			}
+
+
+			if ( !mustMatch || !this.hasConflicts(word,r,c, dr, dc) ) {
+				this._setChars(word,r,c,dr,dc);
+				return true;
+			}
 
 		}
 
@@ -171,17 +263,31 @@ export class CharGrid {
 
 	tryDirPlace( word, dir, mustMatch=false ) {
 
-		let dr = dir.dr;
-		let dc = dir.dc;
+		let {dr,dc} = dir;
 
-		let r = randInt( 0, this._rows );
-		let c = randInt(0, this._cols );
+		// start placing at random position.
+		let r = rand( this._rows );
+		let c = rand( this._cols );
 
 		let maxTries = this._rows*this._cols;
 
+		let lenMinus = word.length-1;
+
 		while( maxTries-- > 0 ) {
 
-			if ( this.tryPutWord( word, r,c, dr, dc, mustMatch ) ) return true;
+			let oob = false;		// out of bounds.
+			if ( dr > 0 ) {
+				if ( r + lenMinus >= this._rows ) oob = true;
+			} else if ( dr < 0 ) {
+				if ( r-lenMinus < 0 ) oob=true;
+			}
+			if ( dc > 0 ) {
+				if ( c+lenMinus >= this._cols ) oob = true;
+			} else if ( dc < 0 ) {
+				if ( c-lenMinus < 0 ) oob = true;
+			}
+
+			if ( !oob && this.tryPutWord( word, r,c, dr, dc, mustMatch ) ) return true;
 			// @note advancement of r,c here has nothing to do with direction.
 			// It is just attempting to place the word at every grid space.
 			if ( ++c>= this._cols ) {
@@ -201,7 +307,7 @@ export class CharGrid {
 	 * @param {bool} [mustMatch=false] - must match existing characters.
 	 * @returns {boolean} true on success. false on failure.
 	 */
-	tryRowPlace( word, mustMatch=false ) {
+	/*tryRowPlace( word, mustMatch=false ) {
 
 		//console.log('Try place row: ' + word );
 
@@ -239,7 +345,7 @@ export class CharGrid {
 
 		return false;
 
-	}
+	}*/
 
 	/**
 	 * Attempt to place word in a random position/orientation.
@@ -247,7 +353,7 @@ export class CharGrid {
 	 * @param {bool} [mustMatch=false] - must match existing characters.
 	 * @returns {boolean} true on success. false on failure.
 	 */
-	tryColPlace( word, mustMatch=false ) {
+	/*tryColPlace( word, mustMatch=false ) {
 
 		//console.log('Try place col: ' + word );
 
@@ -285,21 +391,6 @@ export class CharGrid {
 
 		return false;
 
-	}
-
-	/**
-	 * Attempt to place word on a diagonal ( forward or backward.)
-	 * @param {string} word
-	 * @param {boolean} mustMatch
-	 */
-	/*tryDiagonalPlace( word, mustMatch=false) {
-
-	}
-
-	tryFowardDiagonal(word, mustMatch=false) {
-	}
-
-	tryBackwardDiagonal(word,mustMatch=false ) {
 	}*/
 
 	/**
@@ -375,10 +466,10 @@ export class CharGrid {
 	/**
 	 *
 	 * @param {string} word
-	 * @param {number} r
-	 * @param {number} c
-	 * @param {1|-1|0} rDir
-	 * @param {1|-1|0} cDir
+	 * @param {number} r - valid grid row.
+	 * @param {number} c - valid grid colum.
+	 * @param {1|-1|0} rDir - row-direction of word placement.
+	 * @param {1|-1|0} cDir - column-direction of word placement.
 	 * @param {boolean} [mustMatch=false]
 	 * @returns {boolean} true if word can be safely placed.
 	 */
@@ -389,8 +480,8 @@ export class CharGrid {
 		let endR = r+rDir*len;
 		let endC = c+cDir*len;
 
-		if ( r < 0 || r >= this._rows || endR < 0 || endR > this._rows ) return false;
-		if ( c < 0 || c >= this._cols || endC < 0 || endC > this._cols ) return false;
+		if ( endR < 0 || endR > this._rows ) return false;
+		if ( endC < 0 || endC > this._cols ) return false;
 
 		if ( mustMatch) {
 
@@ -406,6 +497,35 @@ export class CharGrid {
 
 		}
 		return true;
+
+	}
+
+	/**
+	 * Determine if word placed at point in direction will conflict
+	 * with existing characters.
+	 * @param {string} word
+	 * @param {number} r - valid grid row.
+	 * @param {number} c - valid grid colum.
+	 * @param {1|-1|0} rDir - row-direction of word placement.
+	 * @param {1|-1|0} cDir - column-direction of word placement.
+	 * @returns {boolean} true if word can be safely placed.
+	 */
+	hasConflicts( word, r, c, rDir, cDir ) {
+
+		let len = word.length;
+		let a = this._chars;
+
+		for( let i = 0; i < len; i++ ) {
+
+			let chr = a[r][c];
+			if ( chr != null && chr != word[i]) return true;
+			r += rDir;
+			c += cDir;
+
+		}
+
+
+		return false;
 
 	}
 
@@ -439,12 +559,16 @@ export class CharGrid {
 	 */
 	fillEmpty() {
 
-		for( let r = 0; r < this._rows; r++ ) {
+		let cols = this._cols;
+		let rows = this._rows;
 
-			for( let c = 0; c < this._cols; c++ ) {
+		for( let r = 0; r < rows; r++ ) {
 
-				if ( this._chars[r][c] != null ) continue;
-				this._chars[r][c] = RandChars[ Math.floor( RandChars.length*Math.random() ) ];
+			let a = this._chars[r];
+			for( let c = 0; c < cols; c++ ) {
+
+				if ( a[c] != null ) continue;
+				a[c] = RandChars[ Math.floor( RandChars.length*Math.random() ) ];
 
 			}
 
@@ -458,9 +582,16 @@ export class CharGrid {
 	 */
 	fillAll( char=BLANK_CHAR ) {
 
-		for( let r = 0; r < this._rows; r++ ) {
-			for( let c = 0; c < this._cols; c++ ) {
-				this._chars[r][c] = char;
+		let cols = this._cols;
+		let rows = this._rows;
+
+		for( let r = 0; r < rows; r++ ) {
+
+			let a = this._chars[r];
+			for( let c = 0; c < cols; c++ ) {
+
+				a[c] = char;
+
 			}
 
 		}
@@ -503,5 +634,20 @@ export class CharGrid {
 
 	}
 
+
+	/**
+	 * Attempt to place word on a diagonal ( forward or backward.)
+	 * @param {string} word
+	 * @param {boolean} mustMatch
+	 */
+	/*tryDiagonalPlace( word, mustMatch=false) {
+
+	}
+
+	tryFowardDiagonal(word, mustMatch=false) {
+	}
+
+	tryBackwardDiagonal(word,mustMatch=false ) {
+	}*/
 
 }

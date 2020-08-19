@@ -25,6 +25,39 @@ const medList = [
 
 ];
 
+const longList = [
+
+	'cat',
+	'amphibian',
+	'at',
+	'to',
+	'cataract',
+	'persiflage',
+	'mendacious',
+	'bedroom',
+	'chair',
+	'obscure',
+	'confiscate',
+	'dilemma',
+	'computer',
+	'program',
+	'density',
+	'pidgeon',
+	'keyboard',
+	'zebra',
+	'yellow',
+	'eyeball',
+	'zenith',
+	'walrus',
+	'monitor',
+	'lizard',
+	'purple',
+	'liquid',
+	'sky',
+	'a'
+
+];
+
 console.log('RUNNING TEST');
 
 searchTest();
@@ -32,12 +65,10 @@ searchTest();
 function searchTest() {
 
 	console.log('Creating Search');
-	let search = new WordSearch( 10, 10 );
+	let search = new WordSearch( 14, 14 );
 
-	console.log('Placing words.');
+	search.placeAndFill( longList );
 
-	search.placeAndFill( medList );
-
-	console.log( search.toString() );
+	//console.log( search.toString() );
 
 }
