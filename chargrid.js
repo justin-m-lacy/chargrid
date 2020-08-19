@@ -160,6 +160,8 @@ export class CharGrid {
 	 */
 	tryRowPlace( word, mustMatch=false ) {
 
+		console.log('Try place row: ' + word );
+
 		if ( word.length === 0 ) return false;
 
 		// max column where word can start.
@@ -196,13 +198,15 @@ export class CharGrid {
 
 	}
 
-		/**
+	/**
 	 * Attempt to place word in a random position/orientation.
 	 * @param {string} word
 	 * @param {bool} [mustMatch=false] - must match existing characters.
 	 * @returns {boolean} true on success. false on failure.
 	 */
 	tryColPlace( word, mustMatch=false ) {
+
+		//console.log('Try place col: ' + word );
 
 		if ( word.length === 0 ) return false;
 
@@ -274,36 +278,22 @@ export class CharGrid {
 	/**
 	 *
 	 * @param {string} word
-	 * @param {number} row
-	 * @param {number} col
+	 * @param {number} r
+	 * @param {number} c
 	 * @param {boolean} mustMatch
-	 * @returns {boolean} false if word won't fit.
+	 * @returns {boolean}
 	 */
-	putColWord( word, row, col, mustMatch=false ){
+	putRowWord( word, r, c, mustMatch=false ) {
 
+		if (!this.canPutRow( word, r, c, mustMatch) ) return false;
+
+		let a = this._chars[r];
 		let wordLen = word.length;
-
-		if ( col < 0 || col >= this._cols ) return false;
-		if ( row < 0 || row + wordLen > this._rows ) return false;
-
-		if ( mustMatch ) {
-
-			for( let i  = 0; i <wordLen; i++ ) {
-
-				let chr = this._chars[row][col];
-				if ( chr == null ) this._chars[row++][col] = wordLen[i];
-				else if ( chr != wordLen[i]) return false;
-
-
-			}
-
-		} else {
-
-			for( let i  = 0; i <wordLen; i++ ) {
-				this._chars[row++][col] = wordLen[i];
-			}
-
+		for( let i = 0; i <wordLen;i++ ) {
+			a[c++] = word[i];
 		}
+
+		return true;
 
 	}
 
@@ -313,32 +303,64 @@ export class CharGrid {
 	 * @param {number} row
 	 * @param {number} col
 	 * @param {boolean} mustMatch
-	 * @returns {boolean}
+	 * @returns {boolean} false if word won't fit.
 	 */
-	putRowWord( word, row, col, mustMatch=false ) {
+	putColWord( word, row, col, mustMatch=false ){
+
+		if ( !this.canPutCol( word, row, col, mustMatch) ) return false;
 
 		let wordLen = word.length;
+		for( let i  = 0; i <wordLen; i++ ) {
+			this._chars[row++][col] = word[i];
+		}
 
-		if ( row < 0 || row >= this._rows ) return false;
-		if ( col < 0 || col + wordLen > this._cols ) return false;
 
-		let a = this._chars[row];
+		return true;
+
+	}
+
+	canPutRow( word, r, c, mustMatch=false ) {
+
+		if ( r < 0 || r >= this._rows ) return false;
+
+		let wordLen = word.length;
+		if ( c < 0 || c + wordLen > this._cols ) return false;
+
+		let a = this._chars[r];
 		if ( mustMatch ) {
 
+			// check char conflicts.
 			for( let i = 0; i <wordLen;i++ ) {
-
-				// check match conflict.
-				let chr = a[col];
-				if ( chr == null ) a[col++] = word[i];
-				else if ( chr != word[i] ) return false;
+				if ( a[c] != null && a[c] != word[i] ) return false;
+				c++;
 			}
 
-		} else {
-
-			for( let i = 0; i <wordLen;i++ ) {
-				a[col++] = word[i];
-			}
 		}
+
+		return true;
+
+	}
+
+	canPutCol( word, r, c, mustMatch=false ) {
+
+		if ( c < 0 || c >= this._cols ) return false;
+
+		let wordLen = word.length;
+		if ( r < 0 || r + wordLen > this._rows ) return false;
+
+		if ( mustMatch ) {
+
+			for( let i = 0; i < wordLen; i++ ) {
+
+				let chr = this._chars[r][c];
+				if ( chr != null && chr != word[i]) return false;
+				r++;
+
+			}
+
+		}
+
+		return true;
 
 	}
 
@@ -351,6 +373,7 @@ export class CharGrid {
 
 			for( let c = 0; c < this._cols; c++ ) {
 
+				if ( this._chars[r][c] != null ) continue;
 				this._chars[r][c] = RandChars[ Math.floor( RandChars.length*Math.random() ) ];
 
 			}
@@ -388,7 +411,7 @@ export class CharGrid {
 
 	toString(){
 
-		let res = ' ';
+		let res = '';
 
 		let grid = this._chars;
 
