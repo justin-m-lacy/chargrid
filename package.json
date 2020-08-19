@@ -1,12 +1,16 @@
 {
   "name": "wordgrid",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "node --experimental-modules --es-module-specifier-resolution=node test.js"
   },
-  "author": "",
-  "license": "ISC"
+  "repository": {
+	"type" : "git",
+	"url" : "https://github.com/lerpinglemur/chargrid.git"
+  },
+  "author": "Justin Lacy",
+  "license": "MIT"
 }
