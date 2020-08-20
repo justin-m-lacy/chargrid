@@ -33,7 +33,23 @@ const directions = [
 
 export class CharGrid {
 
+	/**
+	 * @property {boolean} allowReverse - whether to allow words in reverse.
+	 */
 	get allowReverse(){return this._allowReverse}
+	set allowReverse(v){this._allowReverse=v;}
+
+	/**
+	 * @property {boolean} allowReverse - whether to allow words in reverse.
+	 */
+	get allowConflicts(){return this._allowConflicts}
+	set allowConflicts(v){this._allowConflicts=v;}
+
+	/**
+	 * @property {boolean} allowDiagonal - whether to allow diagonally placed words.
+	 */
+	get allowDiagonal(){return this._allowDiagonal;}
+	set allowDiagonal(v){this._allowDiagonal=v}
 
 	/**
 	 * @property {string[][]}

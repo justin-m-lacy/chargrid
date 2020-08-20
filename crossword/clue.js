@@ -1,18 +1,15 @@
-export class Clue {
+import { Word } from "../word";
+
+export class Clue extends Word {
+
 
 	get clue(){return this._clue; }
 	set clue(v){this._clue=v}
 
-	get word(){return this._word}
-	set word(v){this._word=v}
+	constructor( vars=null ){
 
-	get row(){return this._row;}
-	set row(v){this._row=v}
+		super(vars);
 
-	get col(){return this._col}
-	set col(v){this._col=v}
-
-	constructor(){
 	}
 
 }

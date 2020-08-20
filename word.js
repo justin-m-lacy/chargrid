@@ -1,5 +1,13 @@
 export class Word {
 
+	toJSON(){
+	}
+
+	/**
+	 * @property {string} length - length of word.
+	 */
+	get length(){return this._word.length }
+
 	/**
 	 * @property {number} row - row where word was placed.
 	 */
@@ -12,14 +20,11 @@ export class Word {
 	get col(){return this._col;}
 	set col(v){this._col=v}
 
+	/**
+	 * @property {string} word - word represented.
+	 */
 	get word(){return this._word;}
 	set word(v){this._word=v}
-
-	/**
-	 * @property {boolean} vertical - whether word is oriented vertically.
-	 */
-	get vertical(){ return this._vertical;}
-	set vertical(v){this._vertical =v}
 
 	/**
 	 * @property {boolean} reversed - whether word appears backwards.
