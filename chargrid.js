@@ -119,7 +119,7 @@ export class CharGrid {
 	 * @param {string} word
 	 * @returns {boolean} true on success. false on failure.
 	 */
-	placeWord1( word ) {
+	placeWord( word ) {
 
 		if ( word.length > this._rows && word.length> this._cols ) return false;
 
@@ -157,10 +157,12 @@ export class CharGrid {
 
 	/**
 	 * Attempt to place a word randomly in the grid.
+	 * NOT USED. Goes space by space, attempting EVERY direction at each space.
+	 * Appears to be slightly worse than doing the direction placements in groups.
 	 * @param {string} word
 	 * @returns {boolean} true on success. false on failure.
 	 */
-	placeWord2( word ) {
+	/*placeWord2( word ) {
 
 		if ( word.length > this._rows && word.length > this._cols ) return false;
 
@@ -196,7 +198,7 @@ export class CharGrid {
 
 		return false;
 
-	}
+	}*/
 
 	/**
 	 * Try placing a word at row,col in any possible direction.
@@ -264,17 +266,21 @@ export class CharGrid {
 
 	}
 
+	/**
+	 * Attempt to place word anywhere in the grid with the given direction.
+	 * @param {string} word
+	 * @param {1|-1|0} dr - row direction.
+	 * @param {1|-1|0} dc - column direction.
+	 * @param {bool} mustMatch
+	 */
 	tryDirPlace( word, dr, dc, mustMatch=false ) {
 
-		let rows = this._rows;
-		let cols = this._cols;
+		let rows = this._rows, cols = this._cols;
 
 		// start placing at random position.
-		let r = rand( rows );
-		let c = rand( cols );
+		let r = rand( rows ), c = rand( cols );
 
 		let maxTries = rows*cols;
-
 		let lenMinus = word.length-1;
 
 		while( maxTries-- > 0 ) {

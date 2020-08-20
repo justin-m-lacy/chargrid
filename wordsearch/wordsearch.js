@@ -25,7 +25,7 @@ export class WordSearch extends CharGrid {
 
 		let testNum = 1;
 		let testName = 'PLACe TEST: ' + testNum;
-		let placeFunc = this['placeWord'+testNum];
+		//let placeFunc = this['placeWord'+testNum];
 
 		console.time( testName );
 
@@ -37,7 +37,7 @@ export class WordSearch extends CharGrid {
 
 		for( let i = arr.length-1; i >= 0; i-- ) {
 
-			if ( !placeFunc.call(this, arr[i] ) ) {
+			if ( !this.placeWord( arr[i] ) ) {
 				unused.push(arr[i]);
 			}
 		}
