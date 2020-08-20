@@ -7,6 +7,9 @@ export class Builder {
 	set conflicts(v){this._conflicts=v}
 
 	constructor(){
+
+		this._conflicts = [];
+
 	}
 
 }

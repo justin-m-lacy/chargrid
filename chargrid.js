@@ -40,7 +40,8 @@ export class CharGrid {
 	set allowReverse(v){this._allowReverse=v;}
 
 	/**
-	 * @property {boolean} allowReverse - whether to allow words in reverse.
+	 * @property {boolean} allowConflicts - whether to allow conflicting letters
+	 * to overlap in the grid.
 	 */
 	get allowConflicts(){return this._allowConflicts}
 	set allowConflicts(v){this._allowConflicts=v;}
