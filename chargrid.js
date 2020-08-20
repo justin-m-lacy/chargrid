@@ -64,7 +64,6 @@ export class CharGrid {
 	get cols(){return this._cols;}
 	set cols(v){this._cols=v}
 
-
 	constructor( rows, cols ){
 
 		this.rows = rows;
@@ -72,6 +71,10 @@ export class CharGrid {
 
 		this.initGrid();
 
+	}
+
+	getChar(r,c) {
+		return this._chars[r][c];
 	}
 
 	/**
@@ -625,6 +628,22 @@ export class CharGrid {
 
 	}
 
+	*[Symbol.iterator]() {
+
+		let rows = this._rows, cols = this._cols;
+
+		for( let r = 0; r < rows; r++ ) {
+
+			for( let c = 0; c < cols; c++ ) {
+
+				yield this._chars[r][c];
+
+			}
+
+		}
+
+	}
+
 	initGrid(){
 
 		let a = [];
@@ -634,6 +653,43 @@ export class CharGrid {
 		}
 
 		this._chars = a;
+
+	}
+
+	/**
+	 * Resize char grid.
+	 * @param {number} rows
+	 * @param {number} cols
+	 */
+	resize( rows, cols) {
+
+		if ( rows === 0 || cols === 0 ) throw new Error('Invalid Size: ' + rows +',' + cols );
+
+		var arr = this.chars;
+
+		if ( rows < this._rows) {
+
+			arr = arr.slice(0, rows );
+
+		} else if ( rows > this._rows ) {
+
+			for( let i = rows-this._rows; i > 0; i-- ) {
+				arr.push( new Array(cols) );
+			}
+
+		}
+
+		if ( cols != this._cols ){
+
+			for( let i = Math.min(rows,this._rows)-1; i >= 0; i-- ) {
+				arr[i].length = cols;
+			}
+
+		}
+
+		this.chars = arr;
+		this.rows = rows;
+		this.cols = cols;
 
 	}
 
@@ -660,21 +716,5 @@ export class CharGrid {
 		return res;
 
 	}
-
-
-	/**
-	 * Attempt to place word on a diagonal ( forward or backward.)
-	 * @param {string} word
-	 * @param {boolean} mustMatch
-	 */
-	/*tryDiagonalPlace( word, mustMatch=false) {
-
-	}
-
-	tryFowardDiagonal(word, mustMatch=false) {
-	}
-
-	tryBackwardDiagonal(word,mustMatch=false ) {
-	}*/
 
 }
