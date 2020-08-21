@@ -2,13 +2,17 @@ import {CharGrid} from '../chargrid';
 
 export class WordSearch extends CharGrid {
 
+	toJSON(){
+
+	}
+
 	/**
 	 * @property {Word[]} words - words already placed in wordsearch.
 	 */
 	get words(){return this._words}
 	set words(v){this._words=v;}
 
-	constructor( rows, cols ){
+	constructor( rows=10, cols=10 ){
 
 		super( rows, cols );
 
@@ -23,11 +27,7 @@ export class WordSearch extends CharGrid {
 	 */
 	placeWords( words ) {
 
-		let testNum = 1;
-		let testName = 'PLACe TEST: ' + testNum;
-		//let placeFunc = this['placeWord'+testNum];
-
-		console.time( testName );
+		//console.time( testName );
 
 		if ( !Array.isArray(words) ) throw new Error('Words must be array.');
 
@@ -42,7 +42,7 @@ export class WordSearch extends CharGrid {
 			}
 		}
 
-		console.timeEnd( testName );
+		//console.timeEnd( testName );
 
 		console.log('Words Unused: ' + unused.length );
 
