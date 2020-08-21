@@ -1,8 +1,13 @@
 /**
- * Get maximum word length
+ * @const {RegExp} NonWord - matches nonword characters.
+ */
+export const NonWord = /\W+/gi;
+
+/**
+ * Get length of longest word.
  * @param {string[]} words
  */
-export function maxSize( words ) {
+export function longest( words ) {
 
 	let max = 0;
 	for( let i = words.length-1; i >= 0; i-- ) {
@@ -12,4 +17,8 @@ export function maxSize( words ) {
 
 	return max;
 
+}
+
+export function isEmpty(c) {
+	return c == null || c === '' || c === ' ';
 }

@@ -58,6 +58,9 @@ export class WordSearch extends CharGrid {
 	 */
 	placeAndFill( words ) {
 
+		// empty current letters.
+		this.fillAll();
+
 		let unused = this.placeWords(words);
 
 		this.fillEmpty();

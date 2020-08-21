@@ -1,4 +1,5 @@
 import { randInt, strReverse, rand } from "./util/util";
+import { isEmpty, NonWord } from "./util/charutils";
 
 const RandChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -51,6 +52,19 @@ export class CharGrid {
 	 */
 	get allowDiagonal(){return this._allowDiagonal;}
 	set allowDiagonal(v){this._allowDiagonal=v}
+
+	/**
+	 * @property {boolean} noTrim - don't remove leading and trailing whitespace.
+	 */
+	get noTrim(){return this._noTrim;}
+	set noTrim(v){this._noTrim =v}
+
+	/**
+	 * @propert {boolean} allowNonword - allow non-word chars
+	 */
+	get allowNonword(){return this._allowNonword;}
+	set allowNonword(v){this._allowNonword =v}
+
 
 	/**
 	 * @property {string[][]}
@@ -134,7 +148,16 @@ export class CharGrid {
 
 	}
 
-		/**
+	/**
+	 * Prepare word or characters being added.
+	 * @param {*} word
+	 * @returns {boolean} word
+	 */
+	prepareWord(word) {
+
+	}
+
+	/**
 	 * Attempt to place a word randomly in the grid.
 	 * @param {string} word
 	 * @returns {boolean} true on success. false on failure.
@@ -142,6 +165,11 @@ export class CharGrid {
 	placeWord( word ) {
 
 		if ( word.length > this._rows && word.length> this._cols ) return false;
+		if ( !this.noTrim ) word = word.trim();
+		if ( !this.allowNonword ) {
+			word = word.replace( NonWord, '' );
+		}
+
 
 		let firstTry = word;
 		let nextTry = strReverse(word);
@@ -519,7 +547,7 @@ export class CharGrid {
 			for( let i = 0; i < len; i++ ) {
 
 				let chr = a[r][c];
-				if ( chr != null && chr != word[i]) return false;
+				if ( !isEmpty(chr) && chr != word[i]) return false;
 				r += rDir;
 				c += cDir;
 
@@ -548,7 +576,7 @@ export class CharGrid {
 		for( let i = 0; i < len; i++ ) {
 
 			let chr = a[r][c];
-			if ( chr != null && chr != word[i]) return true;
+			if ( !isEmpty(chr) && chr != word[i]) return true;
 			r += rDir;
 			c += cDir;
 
@@ -597,7 +625,7 @@ export class CharGrid {
 			let a = this._chars[r];
 			for( let c = 0; c < cols; c++ ) {
 
-				if ( a[c] != null ) continue;
+				if ( !isEmpty(a[c])) continue;
 				a[c] = RandChars[ Math.floor( RandChars.length*Math.random() ) ];
 
 			}
