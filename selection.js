@@ -3,11 +3,11 @@ export class Selection {
 	get startRow(){return this._startRow;}
 	set startRow(v){this._startRow=v}
 
-	get startCol(){return this.startCol;}
-	set startCol(v){this.startCol=v}
+	get startCol(){return this._startCol;}
+	set startCol(v){this._startCol=v}
 
-	get endRow(){return this.endRow;}
-	set endRow(v){this.endRow=v}
+	get endRow(){return this._endRow;}
+	set endRow(v){this._endRow=v}
 
 	get endCol(){return this._endCol;}
 	set endCol(v){this._endCol=v}
