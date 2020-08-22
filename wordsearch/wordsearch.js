@@ -16,7 +16,38 @@ export class WordSearch extends CharGrid {
 
 		super( rows, cols );
 
-		this._words = new Map();
+		//this._words = new Map();
+
+	}
+
+	/**
+	 * Read off the word crossed by the word selection.
+	 * @param {*} sel
+	 */
+	readWord(sel){
+
+		let s = '';
+
+		let dr = sel.endRow - sel.startRow;
+		let dc = sel.endCol - sel.startCol;
+
+		let len = Math.abs( dr || dc );
+		dr /= len;
+		dc /= len;
+
+		let r = sel.startRow;
+		let c = sel.startCol;
+
+		//endpoints inclusive.
+		for( let i = 0; i <= len;i++ ){
+
+			s += this.chars[r][c];
+			r += dr;
+			c += dc;
+
+		}
+
+		return s;
 
 	}
 
@@ -42,6 +73,8 @@ export class WordSearch extends CharGrid {
 			}
 		}
 
+		this.words = words;
+		//console.log('created size: ' + this.rows +','+this.cols);
 		//console.timeEnd( testName );
 
 		console.log('Words Unused: ' + unused.length );

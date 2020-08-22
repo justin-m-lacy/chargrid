@@ -60,7 +60,7 @@ export class CharGrid {
 	set noTrim(v){this._noTrim =v}
 
 	/**
-	 * @propert {boolean} allowNonword - allow non-word chars
+	 * @property {boolean} allowNonword - allow non-word chars
 	 */
 	get allowNonword(){return this._allowNonword;}
 	set allowNonword(v){this._allowNonword =v}
@@ -79,16 +79,20 @@ export class CharGrid {
 	set cols(v){this._cols=v}
 
 	constructor( rows, cols ){
-
-		this.rows = rows;
-		this.cols = cols;
-
-		this.initGrid();
-
+		this.initGrid( rows, cols );
 	}
 
 	getChar(r,c) {
-		return this._chars[r][c];
+
+		if ( r < 0 || r>= this._rows ) {
+			console.error('Invalid ROW: ' +r);
+			console.log('THIS SIZE: ' + this._rows+','+this._cols);
+			return '';
+		} else if ( c < 0 || c>= this._cols ) {
+			console.error('Invalid COL: ' +c);
+			return '';
+		} else return this._chars[r][c];
+
 	}
 
 	/**
@@ -672,13 +676,18 @@ export class CharGrid {
 
 	}
 
-	initGrid(){
+	initGrid( rows, cols ){
 
 		let a = [];
 
-		for( let r = 0; r < this._rows; r++ ) {
-			a[r] = new Array( this._cols );
+		console.log('CREATED GRID');
+
+		for( let r = 0; r < rows; r++ ) {
+			a[r] = new Array( cols );
 		}
+
+		this.rows = rows;
+		this.cols = cols;
 
 		this._chars = a;
 
@@ -692,6 +701,8 @@ export class CharGrid {
 	resize( rows, cols) {
 
 		if ( rows === 0 || cols === 0 ) throw new Error('Invalid Size: ' + rows +',' + cols );
+
+		console.log('RESIZING SEARCH');
 
 		var arr = this.chars;
 

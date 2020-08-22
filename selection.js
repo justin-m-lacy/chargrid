@@ -1,3 +1,7 @@
+/**
+ * @class Selection - grid range selected.
+ * endRow,endCol is inclusive.
+ */
 export class Selection {
 
 	get startRow(){return this._startRow;}
