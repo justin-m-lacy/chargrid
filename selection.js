@@ -32,4 +32,47 @@ export class Selection {
 
 	}
 
+
+	/**
+	 * Set the selection endpoint and ensure any diagonal
+	 * matches rows,columns in size.
+	 * @param {number} endRow
+	 * @param {number} endCol
+	 */
+	setEnd( endRow, endCol ){
+
+		let dr = Math.abs( endRow - this.startRow );
+		let dc = Math.abs( endCol - this.startCol );
+
+		if ( dr > dc ) {
+
+			// match column change to row change.
+			if ( dc !== 0 ) {
+
+				if ( endCol > this.startCol ) {
+					endCol = this.startCol + dr;
+				} else {
+					endCol = this.startCol - dr;
+				}
+
+			}
+
+		} else if ( dc > dr ) {
+
+			if ( dr !== 0 ) {
+
+				if ( endRow > this.startRow ) {
+					endRow = this.startRow + dc;
+				} else {
+					endRow = this.startRow - dc;
+				}
+
+			}
+
+		}
+		this.endRow = endRow;
+		this.endCol = endCol;
+
+	}
+
 }
