@@ -4,11 +4,22 @@
 export class WordState {
 
 	toJSON(){
-
+		return {
+			remaining:this.remaining,
+			found:this.found.length>0?this.found:null
+		}
 	}
 
+	/*
+	No advantage to storing the word since the state is indexed
+	by object property.
 	get word(){return this._word;}
-	set word(v){this._word=v}
+	set word(v){this._word=v}*/
+
+	/**
+	 * @property {number} total - total words expected.
+	 */
+	get total(){return this._remaining +this._found.length }
 
 	/**
 	 * @property {number} remaining - total words remaining in puzzle.
@@ -25,11 +36,37 @@ export class WordState {
 	get found(){return this._found;}
 	set found(v){this._found=v}
 
-	constructor( word, remaining=0 ){
+	/**
+	 * @param {number|object} [remaining=1] - number remaining or json save object.
+	 */
+	constructor( remaining=1 ){
 
-		this.word = word;
-		this.remaining = remaining;
-		this._found = [];
+		if ( typeof remaining === 'number' ) {
+
+			//this.word = word;
+			this.remaining = remaining;
+			this._found = [];
+
+		} else {
+
+			this.revive(remaining);
+
+		}
+
+	}
+
+	revive( obj ) {
+
+		this.remaining = obj.remaining;
+
+		if ( obj.found ) {
+
+			this.found = obj.found.map(v=>new Selection(v.r0, v.c0, v.r1, v.c1) );
+
+		} else {
+
+			this.found = [];
+		}
 
 	}
 

@@ -1,5 +1,6 @@
 import {WordSearch} from './wordsearch';
 import {WordState} from '../wordstate';
+import { reverse } from '../util/charutils';
 
 /**
  * Combines game state information with base wordsearch game.
@@ -10,16 +11,17 @@ export class SearchGame {
 
 		return {
 			grid:this._grid,
-			state:this._state,
+			states:this._states,
 			time:this.time
 		}
 
 	}
 
-	get grid(){return this._grid}
+	get grid(){return this._grid }
 
 	/**
-	 * @property {WordState[]} states - States of each word, position found,etc.
+	 * @property {Object<string,WordState>} states - States of each word, position found,etc.
+	 * Simple object is used for Vue reactivity.
 	 */
 	get states(){return this._states}
 
@@ -30,39 +32,101 @@ export class SearchGame {
 	get time(){return this._time;}
 	set time(v){this._time=v}
 
+	/**
+	 * @property {number} remaining - count of all words remaining.
+	 */
+	get remaining(){return this._remaining;}
+
+	/**
+	 * @property {number} wordsTotal - total words in search.
+	 */
+	get wordsTotal(){return this._grid.words.length; }
+
+	/**
+	 *
+	 * @param {WordSearch|object} vars - WordSearch or json save object.
+	 */
 	constructor( vars=null ){
 
 		if ( vars instanceof WordSearch ) {
 
 			this._grid = vars;
+			this._remaining = 0;
+
+			this._states = this.makeStates( vars );
+
+			this.time = 0;
 
 		} else {
 
 			// restore from JSON
 			this._grid = new WordSearch( vars.wordsearch );
+			this.reviveStates( this._grid, vars.states );
+
+			time = Number( vars.time || 0 );
 
 
 		}
 
 	}
 
-	initWords( grid ){
+	/**
+	 *
+	 * @param {Selection} sel
+	 * @returns {boolean} true if selection is an unused, valid word match.
+	 */
+	tryMatch( sel ) {
 
-		this.foundCount = 0;
+		let word = this._grid.readWord(sel);
 
-		let words = [];
+		let state = this._states[word];
+		if ( !state ) {
+			word = reverse(word);
+			state = this._states[word];
+			if ( !state) return false;
+		}
+
+		if ( state.tryAdd(sel) ) {
+			this._remaining--;
+			return true;
+		}
+		return false;
+
+	}
+
+	reviveStates( grid, states ){
+
+		// todo: fix errors compared to grid?
+
+		for( let p in states ) {
+
+			states[p] = new WordState( states[p] );
+
+		}
+
+	}
+
+	makeStates( grid ){
+
+		this._remaining = 0;
+
+		let states = {};
 
 		let searchWords = grid.words;
 		for( let p of searchWords ) {
 
-			//this.words[p] = new WordState(p, i++);
-			words.push( new WordState(p) );
+			let s = states[p];
+			if ( s ) {
+				s.remaining++;
+			} else {
+				//console.log('init state: ' + p );
+				states[p] = new WordState();
+			}
+			this._remaining++;
 
 		}
 
-		this._states = words;
-
-		return words;
+		return states;
 
 	}
 
