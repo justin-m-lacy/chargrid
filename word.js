@@ -34,7 +34,7 @@ export class Word {
 
 	constructor(vars){
 
-		Object.assign( this, vars );
+		if ( vars ) Object.assign( this, vars );
 
 	}
 

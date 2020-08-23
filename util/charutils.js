@@ -22,3 +22,14 @@ export function longest( words ) {
 export function isEmpty(c) {
 	return c == null || c === '' || c === ' ';
 }
+
+
+export function reverse(s){
+
+	let r = '';
+	for( let i = s.length-1; i>=0; i-- ) {
+		r += s[i];
+	}
+	return r;
+
+}

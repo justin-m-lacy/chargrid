@@ -36,6 +36,7 @@ export class Selection {
 	/**
 	 * Set the selection endpoint and ensure any diagonal
 	 * matches rows,columns in size.
+	 * NOTE: This can cause the adjusted endRow,endCol to go off grid.
 	 * @param {number} endRow
 	 * @param {number} endCol
 	 */

@@ -4,5 +4,6 @@ export {Direction} from './direction';
 export {Conflict} from './conflict';
 export {CharGrid} from './chargrid';
 export { Selection } from './selection';
+export { WordState } from './wordstate';
 
 export * from './util/charutils';

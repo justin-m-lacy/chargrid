@@ -1,5 +1,5 @@
-import { randInt, strReverse, rand } from "./util/util";
-import { isEmpty, NonWord } from "./util/charutils";
+import { rand } from "./util/util";
+import {  reverse, isEmpty, NonWord } from "./util/charutils";
 
 const RandChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -176,7 +176,7 @@ export class CharGrid {
 
 
 		let firstTry = word;
-		let nextTry = strReverse(word);
+		let nextTry = reverse(word);
 
 		if ( Math.random() < REVERSE_RATE ) {
 
@@ -219,7 +219,7 @@ export class CharGrid {
 		if ( word.length > this._rows && word.length > this._cols ) return false;
 
 		let firstTry = word;
-		let nextTry = strReverse(word);
+		let nextTry = reverse(word);
 
 		if ( Math.random() < REVERSE_RATE ) {
 
@@ -379,7 +379,7 @@ export class CharGrid {
 		let maxCol = this._cols - word.length;
 		if ( maxCol < 0 ) return false;
 
-		//let reverse = strReverse(word);
+		//let reverse = reverse(word);
 
 		let rowTries = this.rows;
 
@@ -425,7 +425,7 @@ export class CharGrid {
 		let maxRow = this._rows - word.length;
 		if ( maxRow < 0 ) return false;
 
-		//let reverse = strReverse(word);
+		//let reverse = reverse(word);
 
 		let colTries = this.cols;
 
