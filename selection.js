@@ -1,20 +1,30 @@
 /**
  * @class Selection - grid range selected.
- * endRow,endCol is inclusive.
+ * r1,c1 is inclusive.
  */
 export class Selection {
 
-	get startRow(){return this._startRow;}
-	set startRow(v){this._startRow=v}
+	toJSON(){
 
-	get startCol(){return this._startCol;}
-	set startCol(v){this._startCol=v}
+		return {
+			r0:this._r0,
+			c0:this._c0,
+			r1:this._r1,
+			c1:this._c1
+		}
+	}
 
-	get endRow(){return this._endRow;}
-	set endRow(v){this._endRow=v}
+	get r0(){return this._r0;}
+	set r0(v){this._r0=v}
 
-	get endCol(){return this._endCol;}
-	set endCol(v){this._endCol=v}
+	get c0(){return this._c0;}
+	set c0(v){this._c0=v}
+
+	get r1(){return this._r1;}
+	set r1(v){this._r1=v}
+
+	get c1(){return this._c1;}
+	set c1(v){this._c1=v}
 
 	/**
 	 * @property {string} word - word being selected.
@@ -22,38 +32,52 @@ export class Selection {
 	//get word(){return this._word;}
 	//set word(v){this._word=v}
 
-	constructor( startRow, startCol, endRow, endCol ){
+	constructor( r0=0, c0=0, r1=0, c1=0 ){
 
-		this.startRow = startRow;
-		this.startCol = startCol;
+		this.r0 = r0;
+		this.c0 = c0;
 
-		this.endRow = endRow;
-		this.endCol = endCol;
+		this.r1 = r1;
+		this.c1 = c1;
 
 	}
 
+	/**
+	 * Test if two selections are equal.
+	 * @param {Selection} s - selection to test for equality.
+	 * @returns {boolean}
+	 */
+	equals(s){
+
+		if ( this.r0 === s.r0 && this.c0 === s.c0 ) {
+			return this.r1 === s.r1 && this.c1 === s.c1;
+		} else if ( this.r0 === s.r1 && this.c0 === s.c1 ) {
+			return this.r1 === s.r0 && this.c1 === s.c0;
+		}
+
+	}
 
 	/**
 	 * Set the selection endpoint and ensure any diagonal
 	 * matches rows,columns in size.
-	 * NOTE: This can cause the adjusted endRow,endCol to go off grid.
+	 * NOTE: This can cause the adjusted r1,c1 to go off grid.
 	 * @param {number} endRow
 	 * @param {number} endCol
 	 */
 	setEnd( endRow, endCol ){
 
-		let dr = Math.abs( endRow - this.startRow );
-		let dc = Math.abs( endCol - this.startCol );
+		let dr = Math.abs( endRow - this.r0 );
+		let dc = Math.abs( endCol - this.c0 );
 
 		if ( dr > dc ) {
 
 			// match column change to row change.
 			if ( dc !== 0 ) {
 
-				if ( endCol > this.startCol ) {
-					endCol = this.startCol + dr;
+				if ( endCol > this.c0 ) {
+					endCol = this.c0 + dr;
 				} else {
-					endCol = this.startCol - dr;
+					endCol = this.c0 - dr;
 				}
 
 			}
@@ -62,17 +86,17 @@ export class Selection {
 
 			if ( dr !== 0 ) {
 
-				if ( endRow > this.startRow ) {
-					endRow = this.startRow + dc;
+				if ( endRow > this.r0 ) {
+					endRow = this.r0 + dc;
 				} else {
-					endRow = this.startRow - dc;
+					endRow = this.r0 - dc;
 				}
 
 			}
 
 		}
-		this.endRow = endRow;
-		this.endCol = endCol;
+		this.r1 = endRow;
+		this.c1 = endCol;
 
 	}
 

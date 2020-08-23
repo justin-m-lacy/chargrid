@@ -28,8 +28,8 @@ export class WordSearch extends CharGrid {
 
 		let s = '';
 
-		let dr = sel.endRow - sel.startRow;
-		let dc = sel.endCol - sel.startCol;
+		let dr = sel.r1 - sel.r0;
+		let dc = sel.c1 - sel.c0;
 
 		let len = Math.abs( dr || dc );
 		if ( len > 0 ) {
@@ -37,8 +37,8 @@ export class WordSearch extends CharGrid {
 			dc /= len;
 		}
 
-		let r = sel.startRow;
-		let c = sel.startCol;
+		let r = sel.r0;
+		let c = sel.c0;
 
 		//console.log('ReadWord: ' + r+','+c + ' len: ' + len );
 
@@ -105,19 +105,19 @@ export class WordSearch extends CharGrid {
 
 	setEnd( sel, endRow, endCol ){
 
-		let dr = Math.abs( endRow - sel.startRow );
-		let dc = Math.abs( endCol - sel.startCol );
+		let dr = Math.abs( endRow - sel.r0 );
+		let dc = Math.abs( endCol - sel.c0 );
 
 		if ( dr === 0 || dc === 0 || dr === dc ) {
-			sel.endRow = endRow;
-			sel.endCol = endCol;
+			sel.r1 = endRow;
+			sel.c1 = endCol;
 			return;
 		}
 
 		if ( dc > dr ){
 
 			if ( dr < 0.6*dc ){
-				sel.endRow = sel.startRow;
+				sel.r1 = sel.r0;
 				return;
 			}
 			dr = dc;
@@ -125,7 +125,7 @@ export class WordSearch extends CharGrid {
 		} else {
 
 			if ( dc < 0.6*dr ) {
-				sel.endCol = sel.startCol;
+				sel.c1 = sel.c0;
 				return;
 			}
 			dc = dr;
@@ -133,8 +133,8 @@ export class WordSearch extends CharGrid {
 		}
 
 		// dr,dc now equal abs.
-		let maxR = endRow > sel.startRow ? this.rows-1 - sel.startRow : sel.startRow; //startRow-0
-		let maxC = endCol > sel.startCol ? this.cols-1 - sel.startCol : sel.startCol; //startCol-0
+		let maxR = endRow > sel.r0 ? this.rows-1 - sel.r0 : sel.r0; //r0-0
+		let maxC = endCol > sel.c0 ? this.cols-1 - sel.c0 : sel.c0; //c0-0
 
 		if ( dr > maxR ) {
 			dr = maxR;
@@ -145,8 +145,8 @@ export class WordSearch extends CharGrid {
 			dr = maxC;
 		}
 
-		sel.endCol = sel.startCol + (endCol > sel.startCol  ? dr : -dr );
-		sel.endRow = sel.startRow + ( endRow > sel.startRow ? dr : -dr );
+		sel.c1 = sel.c0 + (endCol > sel.c0  ? dr : -dr );
+		sel.r1 = sel.r0 + ( endRow > sel.r0 ? dr : -dr );
 
 	}
 
