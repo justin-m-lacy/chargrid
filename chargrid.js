@@ -434,19 +434,19 @@ export class CharGrid {
 	/**
 	 *
 	 * @param {string} word
-	 * @param {number} r - valid grid row.
-	 * @param {number} c - valid grid colum.
+	 * @param {number} r0 - valid grid row.
+	 * @param {number} c0 - valid grid colum.
 	 * @param {1|-1|0} rDir - row-direction of word placement.
 	 * @param {1|-1|0} cDir - column-direction of word placement.
 	 * @param {boolean} [mustMatch=false]
 	 * @returns {boolean} true if word can be safely placed.
 	 */
-	canPutWord( word, r, c, rDir, cDir, mustMatch=false ) {
+	canPutWord( word, r0, c0, rDir, cDir, mustMatch=false ) {
 
 		let lenMinus = word.length-1;
 
-		let endR = r+rDir*lenMinus;
-		let endC = c+cDir*lenMinus;
+		let endR = r0+rDir*lenMinus;
+		let endC = c0+cDir*lenMinus;
 
 		if ( endR < 0 || endR >= this._rows ) return false;
 		if ( endC < 0 || endC >= this._cols ) return false;
@@ -454,6 +454,7 @@ export class CharGrid {
 		if ( mustMatch) {
 
 			let a = this._chars;
+			let r = r0, c = c0;
 			for( let i = 0; i <= lenMinus; i++ ) {
 
 				let chr = a[r][c];
@@ -465,8 +466,7 @@ export class CharGrid {
 
 		}
 
-		if ( this._ranges.has( RangeKey(r,c,endR,endC) )) {
-			console.log('key used: ' + word );
+		if ( this._ranges.has( RangeKey(r0,c0,endR,endC) )) {
 			return false;
 		}
 
@@ -518,6 +518,8 @@ export class CharGrid {
 		let len = word.length-1;
 		let a = this._chars;
 
+		this._ranges.set( RangeKey(r,c,r+dr*len,c+dc*len), word );
+
 		for( let i = 0; i <= len; i++ ) {
 
 			a[r][c] = word[i];
@@ -525,9 +527,6 @@ export class CharGrid {
 			c += dc;
 
 		}
-
-		this._ranges.set( RangeKey(r,c,r+dr*len,c+dc*len), word );
-
 
 	}
 
