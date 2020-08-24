@@ -21,15 +21,15 @@ export class WordSearch extends CharGrid {
 	}
 
 	/**
-	 * Read off the word crossed by the word selection.
-	 * @param {*} sel
+	 * Read off the word in the given range.
+	 * @param {Range} range
 	 */
-	readWord(sel){
+	readWord(range){
 
 		let s = '';
 
-		let dr = sel.r1 - sel.r0;
-		let dc = sel.c1 - sel.c0;
+		let dr = range.r1 - range.r0;
+		let dc = range.c1 - range.c0;
 
 		let len = Math.abs( dr || dc );
 		if ( len > 0 ) {
@@ -37,8 +37,8 @@ export class WordSearch extends CharGrid {
 			dc /= len;
 		}
 
-		let r = sel.r0;
-		let c = sel.c0;
+		let r = range.r0;
+		let c = range.c0;
 
 		//console.log('ReadWord: ' + r+','+c + ' len: ' + len );
 

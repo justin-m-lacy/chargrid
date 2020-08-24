@@ -1,8 +1,7 @@
 import { rand } from "./util/util";
 import {  reverse, isEmpty, NonWord } from "./util/charutils";
-import { CASE_LOWER, CASE_UPPER } from "./consts";
-
-const RandChars = 'abcdefghijklmnopqrstuvwxyz';
+import { CASE_LOWER, CASE_UPPER, LowerChars } from "./consts";
+import { RangeKey } from './range';
 
 /**
  * @const {char} BLANK_CHAR - default char to represent a blank space.
@@ -36,32 +35,32 @@ const directions = [
 export class CharGrid {
 
 	/**
-	 * @property {boolean} allowReverse - whether to allow words in reverse.
+	 * @property {boolean} [noReverse=false] - prevent reverse words.
 	 */
-	get allowReverse(){return this._allowReverse}
-	set allowReverse(v){this._allowReverse=v;}
+	get noReverse(){return this._noReverse}
+	set noReverse(v){this._noReverse=v;}
 
 	/**
-	 * @property {boolean} allowConflicts - whether to allow conflicting letters
+	 * @property {boolean} [allowConflicts=false] - whether to allow conflicting letters
 	 * to overlap in the grid.
 	 */
 	get allowConflicts(){return this._allowConflicts}
 	set allowConflicts(v){this._allowConflicts=v;}
 
 	/**
-	 * @property {boolean} allowDiagonal - whether to allow diagonally placed words.
+	 * @property {boolean} [noDiagonal=false] - Prevent diagonal words.
 	 */
-	get allowDiagonal(){return this._allowDiagonal;}
-	set allowDiagonal(v){this._allowDiagonal=v}
+	get noDiagonal(){return this._noDiagonal;}
+	set noDiagonal(v){this._noDiagonal=v}
 
 	/**
-	 * @property {boolean} noTrim - don't remove leading and trailing whitespace.
+	 * @property {boolean} [noTrim=false] - don't remove leading and trailing whitespace.
 	 */
 	get noTrim(){return this._noTrim;}
 	set noTrim(v){this._noTrim =v}
 
 	/**
-	 * @property {boolean} allowNonword - allow non-word chars
+	 * @property {boolean} [allowNonword=false] - allow non-word chars
 	 */
 	get allowNonword(){return this._allowNonword;}
 	set allowNonword(v){this._allowNonword =v}
@@ -79,15 +78,37 @@ export class CharGrid {
 	get chars(){return this._chars}
 	set chars(v){this._chars = v}
 
+	/**
+	 * @property {number} rows
+	 */
 	get rows(){return this._rows;}
 	set rows(v){this._rows =v}
 
+	/**
+	 * @property {number} cols
+	 */
 	get cols(){return this._cols;}
 	set cols(v){this._cols=v}
+
+	/**
+	 * @property {string[]} filler - filler characters to use.
+	 */
+	get filler(){return this._filler;}
+	set filler(v){this._filler = v;}
+
+	/**
+	 * @property {Map<string,string>} ranges - maps range strings to words
+	 * in that range.
+	 * Used to stop repeated words from being placed in the exact same
+	 * location and counting twice. (Can happen on frequent word repeats.)
+	 */
+	get ranges(){return this._ranges;}
 
 	constructor( rows, cols ){
 
 		this.initGrid( rows, cols );
+
+		this._ranges = new Map();
 
 		this.forceCase = CASE_LOWER;
 
@@ -97,7 +118,6 @@ export class CharGrid {
 
 		if ( r < 0 || r>= this._rows ) {
 			console.error('Invalid ROW: ' +r);
-			console.log('THIS SIZE: ' + this._rows+','+this._cols);
 			return '';
 		} else if ( c < 0 || c>= this._cols ) {
 			console.error('Invalid COL: ' +c);
@@ -230,52 +250,6 @@ export class CharGrid {
 
 	}
 
-
-	/**
-	 * Attempt to place a word randomly in the grid.
-	 * NOT USED. Goes space by space, attempting EVERY direction at each space.
-	 * Appears to be slightly worse than doing the direction placements in groups.
-	 * @param {string} word
-	 * @returns {boolean} true on success. false on failure.
-	 */
-	/*placeWord2( word ) {
-
-		if ( word.length > this._rows && word.length > this._cols ) return false;
-
-		let firstTry = word;
-		let nextTry = reverse(word);
-
-		if ( Math.random() < REVERSE_RATE ) {
-
-			firstTry = nextTry;
-			nextTry = word;
-
-		}
-
-		let rows = this._rows;
-		let cols = this._cols;
-
-		// start placing at random position.
-		let r = rand( rows );
-		let c = rand( cols );
-
-		let maxTries = rows*cols;
-		while ( maxTries-- > 0 ) {
-
-			if ( this.tryDirections(firstTry,r,c,true) ) return true;
-			if ( this.tryDirections(nextTry,r,c,true) ) return true;
-
-			if ( ++c>= cols ) {
-				c = 0;
-				if ( ++r >= rows) r=0;
-			}
-
-		}
-
-		return false;
-
-	}*/
-
 	/**
 	 * Try placing a word at row,col in any possible direction.
 	 * @param {string} word
@@ -388,98 +362,6 @@ export class CharGrid {
 	}
 
 	/**
-	 * Attempt to place word in a random position/orientation.
-	 * @param {string} word
-	 * @param {bool} [mustMatch=false] - must match existing characters.
-	 * @returns {boolean} true on success. false on failure.
-	 */
-	/*tryRowPlace( word, mustMatch=false ) {
-
-		//console.log('Try place row: ' + word );
-
-		if ( word.length === 0 ) return false;
-
-		// max column where word can start.
-		let maxCol = this._cols - word.length;
-		if ( maxCol < 0 ) return false;
-
-		//let reverse = reverse(word);
-
-		let rowTries = this.rows;
-
-		// choose row start.
-		let r = randInt( 0, this.rows );
-
-		// choose col start.
-		let c = randInt( 0,  maxCol );
-
-		while ( rowTries-- > 0 ) {
-
-			let colTries = maxCol;
-			while ( colTries-- > 0 ) {
-
-				if ( this.tryPutRow( word, r, c, mustMatch ) ) {
-					return true;
-				}
-				if ( ++c >= maxCol ) c = 0;
-
-			}
-
-			if ( ++r >= this._rows ) r = 0;
-
-		}
-
-		return false;
-
-	}*/
-
-	/**
-	 * Attempt to place word in a random position/orientation.
-	 * @param {string} word
-	 * @param {bool} [mustMatch=false] - must match existing characters.
-	 * @returns {boolean} true on success. false on failure.
-	 */
-	/*tryColPlace( word, mustMatch=false ) {
-
-		//console.log('Try place col: ' + word );
-
-		if ( word.length === 0 ) return false;
-
-		// max column where word can start.
-		let maxRow = this._rows - word.length;
-		if ( maxRow < 0 ) return false;
-
-		//let reverse = reverse(word);
-
-		let colTries = this.cols;
-
-		// choose col start.
-		let c = randInt( 0, this.cols );
-
-		// choose row start.
-		let r = randInt( 0,  maxRow );
-
-		while ( colTries-- > 0 ) {
-
-			let rowTries = maxRow;
-			while ( rowTries-- > 0 ) {
-
-				if ( this.tryPutCol( word, r, c, mustMatch ) ) {
-					return true;
-				}
-				if ( ++r >= maxRow ) r = 0;
-
-			}
-
-			if ( ++c >= this._cols ) c = 0;
-
-		}
-
-		return false;
-
-	}*/
-
-	/**
 	 *
 	 * @param {string} word
 	 * @param {number} r
@@ -582,6 +464,9 @@ export class CharGrid {
 			}
 
 		}
+
+		if ( this._ranges.has( RangeKey(r,c,endR,endC) )) return false;
+
 		return true;
 
 	}
@@ -638,12 +523,17 @@ export class CharGrid {
 
 		}
 
+		this._ranges.set( RangeKey(r,c,r+dr*len,c+dc*len), word );
+
+
 	}
 
 	/**
 	 * Fill any empty spaces with random characters.
 	 */
 	fillEmpty() {
+
+		let filler = this._filler || LowerChars;
 
 		let cols = this._cols;
 		let rows = this._rows;
@@ -654,7 +544,7 @@ export class CharGrid {
 			for( let c = 0; c < cols; c++ ) {
 
 				if ( !isEmpty(a[c])) continue;
-				a[c] = RandChars[ Math.floor( RandChars.length*Math.random() ) ];
+				a[c] = filler[ Math.floor( filler.length*Math.random() ) ];
 
 			}
 
@@ -704,8 +594,6 @@ export class CharGrid {
 
 		let a = [];
 
-		console.log('CREATED GRID');
-
 		for( let r = 0; r < rows; r++ ) {
 			a[r] = new Array( cols );
 		}
@@ -724,9 +612,8 @@ export class CharGrid {
 	 */
 	resize( rows, cols) {
 
-		if ( rows === 0 || cols === 0 ) throw new Error('Invalid Size: ' + rows +',' + cols );
-
-		console.log('RESIZING SEARCH');
+		if ( rows <= 0 || cols <= 0 ) throw new Error('Invalid Size: ' + rows +',' + cols );
+		console.log('RESIZE TO: ' + rows+','+cols);
 
 		var arr = this.chars;
 

@@ -1,0 +1,137 @@
+/**
+	 * Attempt to place word in a random position/orientation.
+	 * @param {string} word
+	 * @param {bool} [mustMatch=false] - must match existing characters.
+	 * @returns {boolean} true on success. false on failure.
+	 */
+	/*tryRowPlace( word, mustMatch=false ) {
+
+		//console.log('Try place row: ' + word );
+
+		if ( word.length === 0 ) return false;
+
+		// max column where word can start.
+		let maxCol = this._cols - word.length;
+		if ( maxCol < 0 ) return false;
+
+		//let reverse = reverse(word);
+
+		let rowTries = this.rows;
+
+		// choose row start.
+		let r = randInt( 0, this.rows );
+
+		// choose col start.
+		let c = randInt( 0,  maxCol );
+
+		while ( rowTries-- > 0 ) {
+
+			let colTries = maxCol;
+			while ( colTries-- > 0 ) {
+
+				if ( this.tryPutRow( word, r, c, mustMatch ) ) {
+					return true;
+				}
+				if ( ++c >= maxCol ) c = 0;
+
+			}
+
+			if ( ++r >= this._rows ) r = 0;
+
+		}
+
+		return false;
+
+	}*/
+
+	/**
+	 * Attempt to place word in a random position/orientation.
+	 * @param {string} word
+	 * @param {bool} [mustMatch=false] - must match existing characters.
+	 * @returns {boolean} true on success. false on failure.
+	 */
+	/*tryColPlace( word, mustMatch=false ) {
+
+		//console.log('Try place col: ' + word );
+
+		if ( word.length === 0 ) return false;
+
+		// max column where word can start.
+		let maxRow = this._rows - word.length;
+		if ( maxRow < 0 ) return false;
+
+		//let reverse = reverse(word);
+
+		let colTries = this.cols;
+
+		// choose col start.
+		let c = randInt( 0, this.cols );
+
+		// choose row start.
+		let r = randInt( 0,  maxRow );
+
+		while ( colTries-- > 0 ) {
+
+			let rowTries = maxRow;
+			while ( rowTries-- > 0 ) {
+
+				if ( this.tryPutCol( word, r, c, mustMatch ) ) {
+					return true;
+				}
+				if ( ++r >= maxRow ) r = 0;
+
+			}
+
+			if ( ++c >= this._cols ) c = 0;
+
+		}
+
+		return false;
+
+	}*/
+
+
+	/**
+	 * Attempt to place a word randomly in the grid.
+	 * NOT USED. Goes space by space, attempting EVERY direction at each space.
+	 * Appears to be slightly worse than doing the direction placements in groups.
+	 * @param {string} word
+	 * @returns {boolean} true on success. false on failure.
+	 */
+	/*placeWord2( word ) {
+
+		if ( word.length > this._rows && word.length > this._cols ) return false;
+
+		let firstTry = word;
+		let nextTry = reverse(word);
+
+		if ( Math.random() < REVERSE_RATE ) {
+
+			firstTry = nextTry;
+			nextTry = word;
+
+		}
+
+		let rows = this._rows;
+		let cols = this._cols;
+
+		// start placing at random position.
+		let r = rand( rows );
+		let c = rand( cols );
+
+		let maxTries = rows*cols;
+		while ( maxTries-- > 0 ) {
+
+			if ( this.tryDirections(firstTry,r,c,true) ) return true;
+			if ( this.tryDirections(nextTry,r,c,true) ) return true;
+
+			if ( ++c>= cols ) {
+				c = 0;
+				if ( ++r >= rows) r=0;
+			}
+
+		}
+
+		return false;
+
+	}*/

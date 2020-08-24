@@ -29,7 +29,7 @@ export class WordState {
 	set remaining(v){this._remaining=v}
 
 	/**
-	 * @property {Selection[]} found - Locations where word was found.
+	 * @property {Range[]} found - Locations where word was found.
 	 * The locations cannot be known in advance because small words
 	 * might appear more times than expected by coincidence.
 	 */
@@ -61,7 +61,7 @@ export class WordState {
 
 		if ( obj.found ) {
 
-			this.found = obj.found.map(v=>new Selection(v.r0, v.c0, v.r1, v.c1) );
+			this.found = obj.found.map(v=>new Range(v.r0, v.c0, v.r1, v.c1) );
 
 		} else {
 
@@ -73,7 +73,7 @@ export class WordState {
 	/**
 	 * Attempt to add selection to list of found words.
 	 * The selected word is assumed to be a word match.
-	 * @param {Selection} sel - selected coordinates where word match was found.
+	 * @param {Range} sel - selected coordinates where word match was found.
 	 * @returns {boolean} false if no more of the selected word remain,
 	 * or the exact selection was already used.
 	 */
@@ -105,7 +105,7 @@ export class WordState {
 
 	/**
 	 * Add selection coordinates of a found word.
-	 * @param {Selection} sel
+	 * @param {Range} sel
 	 */
 	addFound(sel){
 

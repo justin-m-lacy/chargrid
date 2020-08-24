@@ -1,8 +1,30 @@
 /**
- * @class Selection - grid range selected.
+ * Get a string key for a coordinate range.
+ * NOTE: Range keys always use lowest row coord first,
+ * since reversed range doesn't matter.
+ * @param {number} r0
+ * @param {number} c0
+ * @param {number} r1
+ * @param {number} c1
+ * @returns {string}
+ */
+export function RangeKey(r0,c0,r1,c1){
+
+	if ( r0 < r1 ){
+		return r0+','+c0+'_'+r1+','+c1;
+	} else if ( r0 > r1 ) {
+		return r1+','+c1+'_'+r0+','+c0;
+	} else {
+
+		return c0 <= c1 ? r0+','+c0+'_'+r1+','+c1 : r1+','+c1+'_'+r0+','+c0;
+	}
+}
+
+/**
+ * @class Range - grid range selected.
  * r1,c1 is inclusive.
  */
-export class Selection {
+export class Range {
 
 	toJSON(){
 
@@ -32,6 +54,10 @@ export class Selection {
 	//get word(){return this._word;}
 	//set word(v){this._word=v}
 
+	/**
+	 */
+	toString(){ return this.r0+','+this.c0+"->"+this.r1+','+this.c1 }
+
 	constructor( r0=0, c0=0, r1=0, c1=0 ){
 
 		this.r0 = r0;
@@ -44,7 +70,7 @@ export class Selection {
 
 	/**
 	 * Test if two selections are equal.
-	 * @param {Selection} s - selection to test for equality.
+	 * @param {Range} s - selection to test for equality.
 	 * @returns {boolean}
 	 */
 	equals(s){
@@ -55,6 +81,18 @@ export class Selection {
 			return this.r1 === s.r0 && this.c1 === s.c0;
 		}
 
+	}
+
+	/**
+	 * Checks if selection is equal to the given range coordinates.
+	 * @param {number} r0
+	 * @param {number} c0
+	 * @param {number} r1
+	 * @param {number} c1
+	 * @returns {boolean}
+	 */
+	same( r0, c0, r1, c1) {
+		return this.r0===r0&& this.c0===c0&&this.r1===r1&&this.c1===c1;
 	}
 
 	/**

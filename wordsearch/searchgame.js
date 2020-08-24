@@ -75,12 +75,12 @@ export class SearchGame {
 
 	/**
 	 *
-	 * @param {Selection} sel
+	 * @param {Range} range
 	 * @returns {boolean} true if selection is an unused, valid word match.
 	 */
-	tryMatch( sel ) {
+	tryMatch( range ) {
 
-		let word = this._grid.readWord(sel);
+		let word = this._grid.readWord(range);
 
 		let state = this._states[word];
 		if ( !state ) {
@@ -89,7 +89,7 @@ export class SearchGame {
 			if ( !state) return false;
 		}
 
-		if ( state.tryAdd(sel) ) {
+		if ( state.tryAdd(range) ) {
 			this._remaining--;
 			return true;
 		}
