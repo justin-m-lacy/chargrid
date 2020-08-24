@@ -1,7 +1,8 @@
 import { rand } from "./util/util";
 import {  reverse, isEmpty, NonWord } from "./util/charutils";
+import { CASE_LOWER, CASE_UPPER } from "./consts";
 
-const RandChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const RandChars = 'abcdefghijklmnopqrstuvwxyz';
 
 /**
  * @const {char} BLANK_CHAR - default char to represent a blank space.
@@ -65,6 +66,12 @@ export class CharGrid {
 	get allowNonword(){return this._allowNonword;}
 	set allowNonword(v){this._allowNonword =v}
 
+	/**
+	 * @property {'upper'|'lower'|null} forceCase - force uppercase or lowercase
+	 * characters. 'lower' by default.
+	 */
+	get forceCase(){return this._forceCase;}
+	set forceCase(v){this._forceCase=v}
 
 	/**
 	 * @property {string[][]}
@@ -79,7 +86,11 @@ export class CharGrid {
 	set cols(v){this._cols=v}
 
 	constructor( rows, cols ){
+
 		this.initGrid( rows, cols );
+
+		this.forceCase = CASE_LOWER;
+
 	}
 
 	getChar(r,c) {
@@ -153,11 +164,29 @@ export class CharGrid {
 	}
 
 	/**
-	 * Prepare word or characters being added.
-	 * @param {*} word
-	 * @returns {boolean} word
+	 * Prepare words before being added.
+	 * @param {string[]} words
 	 */
-	prepareWord(word) {
+	prepareWords( words ) {
+
+		for( let i = words.length-1; i>= 0; i--) {
+
+			let w = words[i];
+			if (!this.noTrim) w = w.trim();
+			if ( this._forceCase === CASE_LOWER ) {
+				w = w.toLocaleLowerCase();
+			} else if ( this._forceCase === CASE_UPPER ) {
+				w = w.toLocaleUpperCase();
+			}
+			if ( !this.allowNonword ) {
+				w = w.replace( NonWord, '' );
+			}
+
+			words[i] = w;
+
+		}
+
+		return words;
 
 	}
 
@@ -169,11 +198,6 @@ export class CharGrid {
 	placeWord( word ) {
 
 		if ( word.length > this._rows && word.length> this._cols ) return false;
-		if ( !this.noTrim ) word = word.trim();
-		if ( !this.allowNonword ) {
-			word = word.replace( NonWord, '' );
-		}
-
 
 		let firstTry = word;
 		let nextTry = reverse(word);

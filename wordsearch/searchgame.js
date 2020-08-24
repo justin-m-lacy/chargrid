@@ -17,6 +17,9 @@ export class SearchGame {
 
 	}
 
+	/**
+	 * @property {WordSearch} grid - wordsearch grid.
+	 */
 	get grid(){return this._grid }
 
 	/**

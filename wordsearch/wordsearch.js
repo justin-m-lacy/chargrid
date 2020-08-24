@@ -77,9 +77,11 @@ export class WordSearch extends CharGrid {
 		let arr = words.concat().sort((a,b)=>a.length-b.length);
 		let unused = [];
 
+		this.prepareWords(arr);
+
 		for( let i = arr.length-1; i >= 0; i-- ) {
 
-			let w = arr[i].trim();
+			let w = arr[i];
 
 			if ( !this.placeWord( w ) ) {
 				unused.push( w );
