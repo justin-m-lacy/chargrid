@@ -1,5 +1,6 @@
 import {Crossword} from 'crossword';
 import { BLANK_CHAR } from '../consts';
+import { joinGrid } from '../util/charutils';
 
 /**
  * Game progress information for a Crossword Game.
@@ -11,7 +12,7 @@ export class CrossGame {
 		return {
 
 			grid:this._grid,
-			placed:this._placed,
+			placed:joinGrid( this._placed ),
 			time:this.time
 		}
 
@@ -24,7 +25,7 @@ export class CrossGame {
 	set placed(v){this._placed = v;}
 
 	/**
-	 * @property {number} [time=0] - time taken so far in millseconds.
+	 * @property {number} [time=0] - time taken in millseconds.
 	 * number is not a timestamp, since game can be paused.
 	 */
 	get time(){return this._time;}

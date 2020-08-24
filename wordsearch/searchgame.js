@@ -29,7 +29,7 @@ export class SearchGame {
 	get states(){return this._states}
 
 	/**
-	 * @property {number} [time=0] - time taken so far in millseconds.
+	 * @property {number} [time=0] - time taken in millseconds.
 	 * number is not a timestamp, since game can be paused.
 	 */
 	get time(){return this._time;}

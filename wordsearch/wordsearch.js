@@ -62,46 +62,8 @@ export class WordSearch extends CharGrid {
 
 	}
 
-	/**
-	 * Attempt to place all listed words in the grid.
-	 * @param {string[]} words
-	 * @returns {string[]} list of words that couldn't be placed.
-	 */
-	placeWords( words ) {
-
-		//console.time( testName );
-
-		if ( !Array.isArray(words) ) throw new Error('Words must be array.');
-
-		// fit large words first.
-		let arr = words.concat().sort((a,b)=>a.length-b.length);
-		let unused = [];
-
-		this.prepareWords(arr);
-
-		for( let i = arr.length-1; i >= 0; i-- ) {
-
-			let w = arr[i];
-
-			if ( !this.placeWord( w ) ) {
-				unused.push( w );
-			} else {
-				this.words.push( w );
-			}
-		}
-
-		//console.log('created size: ' + this.rows +','+this.cols);
-		//console.timeEnd( testName );
-
-		console.log('Words Unused: ' + unused.length );
-
-		return unused;
-
-	}
-
 	has( w ){
 
-		console.log('inc: ' + this.words.includes(w));
 		return this.words.includes(w);
 	}
 

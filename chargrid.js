@@ -1,5 +1,5 @@
 import { rand } from "./util/util";
-import {  reverse, isEmpty, NonWord } from "./util/charutils";
+import {  reverse, isEmpty, NonWord, joinGrid } from "./util/charutils";
 import { CASE_LOWER, CASE_UPPER, LowerChars, BLANK_CHAR, REVERSE_RATE } from "./consts";
 import { RangeKey } from './range';
 
@@ -22,42 +22,10 @@ const directions = [
 export class CharGrid {
 
 	/**
-	 * @property {boolean} [noReverse=false] - prevent reverse words.
+	 * @property {BuildOpts} opts - build options.
 	 */
-	get noReverse(){return this._noReverse}
-	set noReverse(v){this._noReverse=v;}
-
-	/**
-	 * @property {boolean} [allowConflicts=false] - whether to allow conflicting letters
-	 * to overlap in the grid.
-	 */
-	get allowConflicts(){return this._allowConflicts}
-	set allowConflicts(v){this._allowConflicts=v;}
-
-	/**
-	 * @property {boolean} [noDiagonal=false] - Prevent diagonal words.
-	 */
-	get noDiagonal(){return this._noDiagonal;}
-	set noDiagonal(v){this._noDiagonal=v}
-
-	/**
-	 * @property {boolean} [noTrim=false] - don't remove leading and trailing whitespace.
-	 */
-	get noTrim(){return this._noTrim;}
-	set noTrim(v){this._noTrim =v}
-
-	/**
-	 * @property {boolean} [allowNonword=false] - allow non-word chars
-	 */
-	get allowNonword(){return this._allowNonword;}
-	set allowNonword(v){this._allowNonword =v}
-
-	/**
-	 * @property {'upper'|'lower'|null} forceCase - force uppercase or lowercase
-	 * characters. 'lower' by default.
-	 */
-	get forceCase(){return this._forceCase;}
-	set forceCase(v){this._forceCase=v}
+	get opts(){return this._opts;}
+	set opts(v){this._opts = v}
 
 	/**
 	 * @property {string[][]}
@@ -78,12 +46,6 @@ export class CharGrid {
 	set cols(v){this._cols=v}
 
 	/**
-	 * @property {string[]} filler - filler characters to use.
-	 */
-	get filler(){return this._filler;}
-	set filler(v){this._filler = v;}
-
-	/**
 	 * @property {Map<string,string>} ranges - maps range strings to words
 	 * in that range.
 	 * Used to stop repeated words from being placed in the exact same
@@ -94,10 +56,7 @@ export class CharGrid {
 	constructor( rows, cols ){
 
 		this.initGrid( rows, cols );
-
 		this._ranges = new Map();
-
-		this.forceCase = CASE_LOWER;
 
 	}
 
@@ -167,33 +126,6 @@ export class CharGrid {
 			c += dc;
 
 		}
-
-	}
-
-	/**
-	 * Prepare words before being added.
-	 * @param {string[]} words
-	 */
-	prepareWords( words ) {
-
-		for( let i = words.length-1; i>= 0; i--) {
-
-			let w = words[i];
-			if (!this.noTrim) w = w.trim();
-			if ( this._forceCase === CASE_LOWER ) {
-				w = w.toLocaleLowerCase();
-			} else if ( this._forceCase === CASE_UPPER ) {
-				w = w.toLocaleUpperCase();
-			}
-			if ( !this.allowNonword ) {
-				w = w.replace( NonWord, '' );
-			}
-
-			words[i] = w;
-
-		}
-
-		return words;
 
 	}
 
@@ -517,55 +449,6 @@ export class CharGrid {
 
 	}
 
-	/**
-	 * Fill any empty spaces with random characters.
-	 */
-	fillEmpty() {
-
-		let filler = this._filler || LowerChars;
-
-		if ( this.forceCase === CASE_LOWER ) filler = filler.toLocaleLowerCase();
-		else if ( this.forceCase === CASE_UPPER ) filler = filler.toLocaleUpperCase();
-
-		let cols = this._cols;
-		let rows = this._rows;
-
-		for( let r = 0; r < rows; r++ ) {
-
-			let a = this._chars[r];
-			for( let c = 0; c < cols; c++ ) {
-
-				if ( !isEmpty(a[c])) continue;
-				a[c] = filler[ Math.floor( filler.length*Math.random() ) ];
-
-			}
-
-		}
-
-	}
-
-	/**
-	 * Fill all spaces with same char.
-	 * @param {string} [char=BLANK_CHAR]
-	 */
-	fillAll( char=BLANK_CHAR ) {
-
-		let cols = this._cols;
-		let rows = this._rows;
-
-		for( let r = 0; r < rows; r++ ) {
-
-			let a = this._chars[r];
-			for( let c = 0; c < cols; c++ ) {
-
-				a[c] = char;
-
-			}
-
-		}
-
-	}
-
 	*[Symbol.iterator]() {
 
 		let rows = this._rows, cols = this._cols;
@@ -636,27 +519,7 @@ export class CharGrid {
 	}
 
 	toString(){
-
-		let res = '';
-
-		let grid = this._chars;
-
-		for( let r = 0; r < this._rows; r++ ) {
-
-			let a = grid[r];
-			for( let c = 0; c < this._cols; c++ ) {
-
-				let chr = a[c];
-				if ( chr == null ) res += '_' + ' ';
-				else res += chr + ' ';
-
-			}
-
-			res += '\n';
-		}
-
-		return res;
-
+		return joinGrid(this._chars );
 	}
 
 }

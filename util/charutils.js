@@ -33,3 +33,34 @@ export function reverse(s){
 	return r;
 
 }
+
+/**
+ * Join a grid into a single string.
+ * @param {string[][]} grid,
+ * @param {string} [nullChar='_'] - character to use in place of any null values.
+ * @param {string} [rowDelim='\n'] - end of row character.
+ * @param {string} [cellDelim=''] - character between grid cells.
+ */
+export function joinGrid( grid, nullChar='_', rowDelim='\n', cellDelim='') {
+
+	let res = '';
+
+	let rows = grid.length;
+	for( let r = 0; r < rows; r++ ) {
+
+		let a = grid[r];
+		let cols = a.length;
+		for( let c = 0; c < cols; c++ ) {
+
+			let chr = a[c];
+			if ( chr == null ) res += nullChar + cellDelim;
+			else res += chr + cellDelim;
+
+		}
+
+		res += rowDelim;
+	}
+
+	return res;
+
+}
