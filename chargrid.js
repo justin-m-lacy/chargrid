@@ -537,6 +537,9 @@ export class CharGrid {
 
 		let filler = this._filler || LowerChars;
 
+		if ( this.forceCase === CASE_LOWER ) filler = filler.toLocaleLowerCase();
+		else if ( this.forceCase === CASE_UPPER ) filler = filler.toLocaleUpperCase();
+
 		let cols = this._cols;
 		let rows = this._rows;
 
