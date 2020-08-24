@@ -443,18 +443,18 @@ export class CharGrid {
 	 */
 	canPutWord( word, r, c, rDir, cDir, mustMatch=false ) {
 
-		let len = word.length;
+		let lenMinus = word.length-1;
 
-		let endR = r+rDir*len;
-		let endC = c+cDir*len;
+		let endR = r+rDir*lenMinus;
+		let endC = c+cDir*lenMinus;
 
-		if ( endR < 0 || endR > this._rows ) return false;
-		if ( endC < 0 || endC > this._cols ) return false;
+		if ( endR < 0 || endR >= this._rows ) return false;
+		if ( endC < 0 || endC >= this._cols ) return false;
 
 		if ( mustMatch) {
 
 			let a = this._chars;
-			for( let i = 0; i < len; i++ ) {
+			for( let i = 0; i <= lenMinus; i++ ) {
 
 				let chr = a[r][c];
 				if ( !isEmpty(chr) && chr != word[i]) return false;
@@ -465,7 +465,10 @@ export class CharGrid {
 
 		}
 
-		if ( this._ranges.has( RangeKey(r,c,endR,endC) )) return false;
+		if ( this._ranges.has( RangeKey(r,c,endR,endC) )) {
+			console.log('key used: ' + word );
+			return false;
+		}
 
 		return true;
 
@@ -512,10 +515,10 @@ export class CharGrid {
 	 */
 	_setChars( word, r, c, dr, dc ) {
 
-		let len = word.length;
+		let len = word.length-1;
 		let a = this._chars;
 
-		for( let i = 0; i < len; i++ ) {
+		for( let i = 0; i <= len; i++ ) {
 
 			a[r][c] = word[i];
 			r += dr;
