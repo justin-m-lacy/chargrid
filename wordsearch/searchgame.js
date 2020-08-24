@@ -29,7 +29,7 @@ export class SearchGame {
 	get states(){return this._states}
 
 	/**
-	 * @property {number} time - time taken so far in millseconds.
+	 * @property {number} [time=0] - time taken so far in millseconds.
 	 * number is not a timestamp, since game can be paused.
 	 */
 	get time(){return this._time;}
@@ -47,7 +47,7 @@ export class SearchGame {
 
 	/**
 	 *
-	 * @param {WordSearch|object} vars - WordSearch or json save object.
+	 * @param {WordSearch|object} [vars=null] - WordSearch or json save object.
 	 */
 	constructor( vars=null ){
 

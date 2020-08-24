@@ -26,12 +26,6 @@ export class Word {
 	get word(){return this._word;}
 	set word(v){this._word=v}
 
-	/**
-	 * @property {boolean} reversed - whether word appears backwards.
-	 */
-	get reversed(){return this._reversed;}
-	set reversed(v){this._reversed=v}
-
 	constructor(vars){
 
 		if ( vars ) Object.assign( this, vars );

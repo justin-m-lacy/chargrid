@@ -6,6 +6,12 @@ export class Crossword extends CharGrid {
 
 	}
 
+	/**
+	 * @property {Clue[]} clues
+	 */
+	get clues(){return this._clues;}
+	set clues(v){this._clues=v}
+
 	constructor( rows, cols ){
 
 		super(rows,cols);

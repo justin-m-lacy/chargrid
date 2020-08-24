@@ -1,22 +1,9 @@
 import { rand } from "./util/util";
 import {  reverse, isEmpty, NonWord } from "./util/charutils";
-import { CASE_LOWER, CASE_UPPER, LowerChars } from "./consts";
+import { CASE_LOWER, CASE_UPPER, LowerChars, BLANK_CHAR, REVERSE_RATE } from "./consts";
 import { RangeKey } from './range';
 
-/**
- * @const {char} BLANK_CHAR - default char to represent a blank space.
- */
-export const BLANK_CHAR = ' ';
 
-/**
- * @const {char} PAD_CHAR - default padding char between characters.
- */
-export const PAD_CHAR = ' ';
-
-/**
- * @const {number} REVERSE_RATE - odds of reversing string.
- */
-const REVERSE_RATE = 0.4;
 
 /**
  * @const {object[]} directions - directions for placing words.
