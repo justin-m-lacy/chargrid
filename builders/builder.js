@@ -1,7 +1,7 @@
 import { BuildOps } from "./buildOps";
 import {  isEmpty, NonWord } from "../util/charutils";
 import {  rand } from "../util/util";
-import { CASE_LOWER, CASE_UPPER, LowerChars, BLANK_CHAR, REVERSE_RATE } from "../consts";
+import { CASE_LOWER, CASE_UPPER, LowerChars, BLANK_CHAR } from "../consts";
 
 const NoDiagonals = [
 
@@ -78,7 +78,7 @@ export class Builder {
 		if ( word.length > this._rows && word.length> this._cols ) return false;
 
 		let reverse = !this.opts.noReverse;
-		let dirs = this.opts.NoDiagonals ? NoDiagonals : AllDirs;
+		let dirs = this.opts.noDiagonal ? NoDiagonals : AllDirs;
 
 		// randomize placement directions so fallback directions aren't chosen in same order.
 		//this.shuffle( directions );
@@ -92,7 +92,7 @@ export class Builder {
 
 			if ( reverse ) {
 
-				if ( Math.random() < REVERSE_RATE ) {
+				if ( Math.random() < this.opts.reverseRate ) {
 					dr = -dr;
 					dc = -dc;
 				}

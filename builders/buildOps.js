@@ -25,13 +25,22 @@ export class BuildOps {
 	set noTrim(v){this._noTrim =v}
 
 	get minRows(){return this._minRows;}
-	set minRows(v){this._minRows=v}
+	set minRows(v){ this._minRows = Number(v) }
 
 	get maxRows(){return this._maxRows;}
-	set maxRows(v){this._maxRows=v}
+	set maxRows(v){ this._maxRows= Number(v) }
 
 	get rows(){return this._rows;}
-	set rows(v){this._rows =v }
+	set rows(v){this._rows = Number(v) }
+
+	get minCols(){return this._minCols;}
+	set minCols(v){ this._minCols = Number(v) }
+
+	get maxCols(){return this._maxCols;}
+	set maxCols(v){ this._maxCols = Number(v) }
+
+	get cols(){return this._cols;}
+	set cols(v){this._cols = Number(v) }
 
 	constructor(vars=null){
 

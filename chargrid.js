@@ -45,7 +45,7 @@ export class CharGrid {
 
 	constructor( rows, cols ){
 
-		this.initGrid( rows, cols );
+		this.makeGrid( rows, cols );
 		this._ranges = new Map();
 
 	}
@@ -304,7 +304,7 @@ export class CharGrid {
 
 	}
 
-	initGrid( rows, cols ){
+	makeGrid( rows, cols ){
 
 		let a = [];
 

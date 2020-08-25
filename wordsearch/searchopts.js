@@ -1,4 +1,5 @@
 import { BuildOps } from "../builders/buildOps";
+import { REVERSE_RATE } from "../consts";
 
 /**
  * Options for WordSearch game.
@@ -16,7 +17,7 @@ export class SearchOpts extends BuildOps {
 	 * word in reverse. Words can still be placed in reverse if they can't be placed
 	 * forwards.
 	 */
-	get reverseRate(){return this._reverseRate; }
+	get reverseRate(){return this._reverseRate || REVERSE_RATE; }
 	set reverseRate(v){this._reverseRate=v;}
 
 	/**
