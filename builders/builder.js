@@ -1,5 +1,6 @@
 import { BuildOps } from "./buildOps";
 import {  isEmpty, NonWord } from "../util/charutils";
+import {  rand } from "../util/util";
 import { CASE_LOWER, CASE_UPPER, LowerChars, BLANK_CHAR, REVERSE_RATE } from "../consts";
 
 const NoDiagonals = [
@@ -189,6 +190,7 @@ export class Builder {
 	 */
 	fillEmpty() {
 
+		let chars = this.grid.chars;
 		let filler = this.opts.filler || LowerChars;
 
 		if ( this.opts.forceCase === CASE_LOWER ) filler = filler.toLocaleLowerCase();
@@ -199,7 +201,7 @@ export class Builder {
 
 		for( let r = 0; r < rows; r++ ) {
 
-			let a = this._chars[r];
+			let a = chars[r];
 			for( let c = 0; c < cols; c++ ) {
 
 				if ( !isEmpty(a[c])) continue;
@@ -220,9 +222,11 @@ export class Builder {
 		let cols = this._cols;
 		let rows = this._rows;
 
+		let chars = this.grid.chars;
+
 		for( let r = 0; r < rows; r++ ) {
 
-			let a = this._chars[r];
+			let a = chars[r];
 			for( let c = 0; c < cols; c++ ) {
 
 				a[c] = char;

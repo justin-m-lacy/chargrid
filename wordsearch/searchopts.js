@@ -27,9 +27,7 @@ export class SearchOpts extends BuildOps {
 
 	constructor( vars=null ){
 
-		if ( vars ) {
-			Object.assign(this,vars);
-		}
+		super(vars);
 
 	}
 

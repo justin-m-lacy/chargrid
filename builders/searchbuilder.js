@@ -25,13 +25,12 @@ export class SearchBuilder extends Builder {
 		words = words.concat().sort((a,b)=>a.length-b.length);
 		this.prepareWords( words, this.opts );
 
-		let grid = this.createGrid();
+		this.grid = this.createGrid( words );
 
-		this._placeWords( words, grid );
+		this._placeWords( words, this.grid );
 
 		this.fillEmpty();
 
-		this.grid = grid;
 		return this.grid;
 
 	}
