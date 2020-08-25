@@ -7,7 +7,7 @@ export class WordSearch extends CharGrid {
 	}
 
 	/**
-	 * @property {Word[]} words - words already placed in wordsearch.
+	 * @property {string[]} words - words already placed in wordsearch.
 	 */
 	get words(){return this._words}
 	set words(v){this._words=v;}
@@ -111,25 +111,6 @@ export class WordSearch extends CharGrid {
 
 		sel.c1 = sel.c0 + (endCol > sel.c0  ? dr : -dr );
 		sel.r1 = sel.r0 + ( endRow > sel.r0 ? dr : -dr );
-
-	}
-
-	/**
-	 * Place all words from list and fill empty spaces
-	 * with random letters.
-	 * @param {string[]} words
-	 * @returns {string[]} list of words that couldn't be placed.
-	 */
-	placeAndFill( words ) {
-
-		// empty current letters.
-		this.fillAll();
-
-		let unused = this.placeWords(words);
-
-		this.fillEmpty();
-
-		return unused;
 
 	}
 

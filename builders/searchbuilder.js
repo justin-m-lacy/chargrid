@@ -1,11 +1,14 @@
 import { Builder } from "./builder";
 import { WordSearch } from "../wordsearch/wordsearch";
+import { SearchOpts } from "../wordsearch/searchopts";
+import { longest } from '../util/charutils';
+import { randInt } from "../util/util";
 
 export class SearchBuilder extends Builder {
 
-	constructor(){
+	constructor( opts=null ){
 
-		super();
+		super( opts || new SearchOpts() );
 
 	}
 
@@ -15,6 +18,12 @@ export class SearchBuilder extends Builder {
 	 * @returns {string[]} list of words that couldn't be placed.
 	 */
 	build( words ) {
+
+		if ( !Array.isArray(words) ) throw new Error('Words must be array.');
+
+		// fit large words first.
+		words = words.concat().sort((a,b)=>a.length-b.length);
+		this.prepareWords( words, this.opts );
 
 		let grid = this.createGrid();
 
@@ -27,22 +36,15 @@ export class SearchBuilder extends Builder {
 
 	}
 
-	_placeWords( grid ){
-
-		if ( !Array.isArray(words) ) throw new Error('Words must be array.');
-
-		// fit large words first.
-		let arr = words.concat().sort((a,b)=>a.length-b.length);
+	_placeWords( words, grid ){
 
 		let unused = [];
 
-		this.prepareWords( arr, this.opts );
+		for( let i = words.length-1; i >= 0; i-- ) {
 
-		for( let i = arr.length-1; i >= 0; i-- ) {
+			let w = words[i];
 
-			let w = arr[i];
-
-			if ( !grid.placeWord( w ) ) {
+			if ( !this.tryPlace( w ) ) {
 				unused.push( w );
 			} else {
 				grid.words.push( w );
@@ -56,9 +58,37 @@ export class SearchBuilder extends Builder {
 	/**
 	 * Create grid of appropriate size.
 	 */
-	createGrid(){
+	createGrid( words ){
 
-		let search = new WordSearch( this.rows, this.cols );
+		let opts = this.opts;
+
+		let rows = opts.rows;
+		let cols = opts.cols;
+
+		let maxWord = longest( words );
+
+		if ( !rows ) {
+
+			if ( opts.minRows && opts.maxRows ) rows = randInt( opts.minRows, opts.maxRows );
+			else if ( opts.minRows ) rows = opts.minRows;
+			else if ( opts.maxRows ) rows = opts.maxRows;
+			else rows = maxWord;
+
+		}
+		if ( !cols ) {
+
+			if ( opts.minCols && opts.maxCols ) cols = randInt( opts.minCols, opts.maxCols );
+			else if ( opts.minCols ) cols = opts.minCols;
+			else if ( opts.maxCols ) cols = opts.maxCols;
+			else cols = maxWord;
+
+		}
+
+		let search = new WordSearch( rows, cols );
+		search.opts = this.opts;
+
+		this.rows = rows;
+		this.cols = cols;
 
 		return search;
 

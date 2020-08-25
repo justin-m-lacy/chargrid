@@ -1,25 +1,15 @@
-import { rand } from "./util/util";
-import {  reverse, isEmpty, NonWord, joinGrid } from "./util/charutils";
-import { CASE_LOWER, CASE_UPPER, LowerChars, BLANK_CHAR, REVERSE_RATE } from "./consts";
+import { rand, shuffle } from "./util/util";
+import {  reverse, isEmpty, joinGrid } from "./util/charutils";
 import { RangeKey } from './range';
 
 
-
-/**
- * @const {object[]} directions - directions for placing words.
- * Negative directions aren't included since the word can
- * simply be placed in reverse instead.
- */
-const directions = [
-
-	{dr:1, dc:0},
-	{dr:0, dc:1},
-	{dr:1, dc:1},
-	{dr:1, dc:-1}
-
-];
-
 export class CharGrid {
+
+	/**
+	 * @property {string} title - title of game/grid.
+	 */
+	get title(){return this._title;}
+	set title(v){this._title=v}
 
 	/**
 	 * @property {BuildOpts} opts - build options.
@@ -126,157 +116,6 @@ export class CharGrid {
 			c += dc;
 
 		}
-
-	}
-
-	/**
-	 * Attempt to place a word randomly in the grid.
-	 * @param {string} word
-	 * @returns {boolean} true on success. false on failure.
-	 */
-	placeWord( word ) {
-
-		if ( word.length > this._rows && word.length> this._cols ) return false;
-
-		let firstTry = word;
-		let nextTry = reverse(word);
-
-		if ( Math.random() < REVERSE_RATE ) {
-
-			firstTry = nextTry;
-			nextTry = word;
-
-		}
-
-		// randomize placement directions.
-		// this is done so fallback directions aren't chosen in same order.
-		//this.randDirs( directions );
-
-		let numDirs = directions.length;
-		let i = rand( numDirs );
-		let dirTries = numDirs;
-
-		while ( dirTries-- > 0 ) {
-
-			if ( this.tryDirPlace( firstTry, directions[i].dr, directions[i].dc, true )) return true;
-			if ( this.tryDirPlace( nextTry, directions[i].dr, directions[i].dc, true )) return true;
-
-			if ( ++i >= numDirs ) i =0;
-
-		}
-
-		return false;
-
-	}
-
-	/**
-	 * Try placing a word at row,col in any possible direction.
-	 * @param {string} word
-	 * @param {number} r
-	 * @param {number} c
-	 * @param {bool} mustMatch
-	 */
-	tryDirections( word, r, c, mustMatch=false ){
-
-		let lenMinus = word.length -1;
-
-		let dirTries = directions.length;
-		let i = rand( dirTries );
-
-		while ( dirTries-- > 0 ) {
-
-			let dir = directions[i];
-			if ( --i < 0 ) i = directions.length-1;
-
-			let {dr,dc } = dir;
-
-			if ( dr > 0 ) {
-				if ( r+lenMinus>=this._rows ) continue;
-			}
-			else if ( dr<0 ){
-				if ( r-lenMinus<0) continue;
-			}
-			if ( dc > 0 ) {
-				if ( c+lenMinus>=this._cols ) continue;
-			}
-			else if ( dc<0 ){
-				if ( c-lenMinus<0) continue;
-			}
-
-
-			if ( !mustMatch || !this.hasConflicts(word,r,c, dr, dc) ) {
-				this._setChars(word,r,c,dr,dc);
-				return true;
-			}
-
-		}
-
-		return false;
-
-	}
-
-	/**
-	 * Randomize direction array.
-	 */
-	randDirs( a ){
-
-		let len = a.length;
-
-		for( let i = len; i >= 0; i-- ) {
-
-			let ind1 = Math.floor( len*Math.random() );
-			let ind2 = Math.floor( len*Math.random() );
-
-			let e1 = a[ind1];
-			a[ind1] = a[ind2];
-			a[ind2] = e1;
-
-		}
-
-	}
-
-	/**
-	 * Attempt to place word anywhere in the grid with the given direction.
-	 * @param {string} word
-	 * @param {1|-1|0} dr - row direction.
-	 * @param {1|-1|0} dc - column direction.
-	 * @param {bool} mustMatch
-	 */
-	tryDirPlace( word, dr, dc, mustMatch=false ) {
-
-		let rows = this._rows, cols = this._cols;
-
-		// start placing at random position.
-		let r = rand( rows ), c = rand( cols );
-
-		let maxTries = rows*cols;
-		let lenMinus = word.length-1;
-
-		while( maxTries-- > 0 ) {
-
-			let oob = false;		// out of bounds.
-			if ( dr > 0 ) {
-				if ( r + lenMinus >= rows ) oob = true;
-			} else if ( dr < 0 ) {
-				if ( r-lenMinus < 0 ) oob=true;
-			}
-			if ( dc > 0 ) {
-				if ( c+lenMinus >= cols ) oob = true;
-			} else if ( dc < 0 ) {
-				if ( c-lenMinus < 0 ) oob = true;
-			}
-
-			if ( !oob && this.tryPutWord( word, r,c, dr, dc, mustMatch ) ) return true;
-			// @note advancement of r,c here has nothing to do with direction.
-			// It is just attempting to place the word at every grid space.
-			if ( --c < 0 ) {
-				c = cols-1;
-				if ( --r < 0 ) r=rows-1;
-			}
-
-		}
-
-		return false;
 
 	}
 

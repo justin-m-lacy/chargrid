@@ -135,3 +135,50 @@
 		return false;
 
 	}*/
+
+
+	/**
+	 * Try placing a word at row,col in any possible direction.
+	 * @param {string} word
+	 * @param {number} r
+	 * @param {number} c
+	 * @param {bool} mustMatch
+	 */
+	tryDirections( word, r, c, mustMatch=false ){
+
+		let lenMinus = word.length -1;
+
+		let dirTries = directions.length;
+		let i = rand( dirTries );
+
+		while ( dirTries-- > 0 ) {
+
+			let dir = directions[i];
+			if ( --i < 0 ) i = directions.length-1;
+
+			let {dr,dc } = dir;
+
+			if ( dr > 0 ) {
+				if ( r+lenMinus>=this._rows ) continue;
+			}
+			else if ( dr<0 ){
+				if ( r-lenMinus<0) continue;
+			}
+			if ( dc > 0 ) {
+				if ( c+lenMinus>=this._cols ) continue;
+			}
+			else if ( dc<0 ){
+				if ( c-lenMinus<0) continue;
+			}
+
+
+			if ( !mustMatch || !this.hasConflicts(word,r,c, dr, dc) ) {
+				this._setChars(word,r,c,dr,dc);
+				return true;
+			}
+
+		}
+
+		return false;
+
+	}
