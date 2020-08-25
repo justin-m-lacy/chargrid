@@ -1,8 +1,14 @@
 import {CharGrid} from '../chargrid';
+import { SearchOpts } from './searchopts';
 
 export class WordSearch extends CharGrid {
 
 	toJSON(){
+
+		let obj = super.toJSON();
+
+		// words stored in chargrid.
+		obj.words = this.words;
 
 	}
 
@@ -16,7 +22,20 @@ export class WordSearch extends CharGrid {
 
 		super( rows, cols );
 
-		this._words = [];
+		this._words = this._words || [];
+
+	}
+
+	/**
+	 * Revive from json.
+	 */
+	revive( json ){
+
+		if ( json.opts ) this.opts = new SearchOpts(json.opts);
+
+		super.revive(json);
+
+		this._words = json.words || [];
 
 	}
 

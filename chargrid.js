@@ -1,9 +1,20 @@
-import { rand, shuffle } from "./util/util";
-import {  reverse, isEmpty, joinGrid } from "./util/charutils";
+import {  isEmpty, joinGrid } from "./util/charutils";
 import { RangeKey } from './range';
 
 
 export class CharGrid {
+
+	toJSON(){
+
+		return {
+
+			title:this.title||undefined,
+			chars:joinGrid(this.chars),
+			opts:this.opts||undefined
+
+		};
+
+	}
 
 	/**
 	 * @property {string} title - title of game/grid.
@@ -47,6 +58,20 @@ export class CharGrid {
 
 		this.makeGrid( rows, cols );
 		this._ranges = new Map();
+
+	}
+
+	/**
+	 * Revive from json.
+	 */
+	revive( json ){
+
+		if ( !json.chars ) {
+			throw new Error('Grid missing char data.');
+		}
+
+		this._chars = this.reviveGrid( json.chars );
+		this.title = json.title||'';
 
 	}
 
@@ -354,6 +379,45 @@ export class CharGrid {
 		this.chars = arr;
 		this.rows = rows;
 		this.cols = cols;
+
+	}
+
+	/**
+	 *
+	 * @param {string} str
+	 * @throws {Error}
+	 * @returns {string[][]} the revived grid.
+	 */
+	reviveGrid( str ) {
+
+		let arr = str.split('\n');
+
+		let rows = str.length;
+
+		if ( rows === 0 ) {
+			throw new Error('Bad revived row size: ' + rows );
+		}
+		let cols = arr[0].length;
+		if ( cols === 0 ) {
+			throw new Error('Bad revived col size: ' + cols );
+		}
+
+		for( let r = 0; r < rows; r++ ) {
+
+			let row = arr[r].split('');
+
+			if ( row.length !== cols ) {
+				throw new Error('Inconsistent col length. Expected: ' + cols + '. Got ' + row.length +'.');
+			}
+
+			arr[r] = row;
+
+		}
+
+		this.rows = rows;
+		this.cols = cols;
+
+		return arr;
 
 	}
 
