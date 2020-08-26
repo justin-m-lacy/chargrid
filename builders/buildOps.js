@@ -42,6 +42,18 @@ export class BuildOps {
 	get cols(){return this._cols;}
 	set cols(v){this._cols = Number(v) }
 
+	/**
+	 * @property {string} rowDelim - character for separating rows in encoding.
+	 */
+	get rowDelim(){return this._rowDelim;}
+	set rowDelim(v){this._rowDelim=v}
+
+	/**
+	 * @property {string} colDelim - character for separating cols in encoding.
+	*/
+	get colDelim(){return this._colDelim}
+	set colDelim(v){this._colDelim=v}
+
 	constructor(vars=null){
 
 		if ( vars ) {

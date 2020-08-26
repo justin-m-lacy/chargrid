@@ -56,8 +56,16 @@ export class CharGrid {
 
 	constructor( rows, cols ){
 
-		this.makeGrid( rows, cols );
 		this._ranges = new Map();
+
+		if ( typeof rows === 'object') {
+
+			this.revive(rows );
+
+		} else {
+
+			this.makeGrid( rows, cols );
+		}
 
 	}
 
@@ -70,7 +78,12 @@ export class CharGrid {
 			throw new Error('Grid missing char data.');
 		}
 
-		this._chars = this.reviveGrid( json.chars );
+		let opts = this.opts;
+
+		this._chars = this.reviveGrid( json.chars,
+			opts ? opts.rowDelim : null,
+			opts ? opts.colDelim : null );
+
 		this.title = json.title||'';
 
 	}
@@ -388,9 +401,9 @@ export class CharGrid {
 	 * @throws {Error}
 	 * @returns {string[][]} the revived grid.
 	 */
-	reviveGrid( str ) {
+	reviveGrid( str, rowDelim='\n', cellDelim='' ) {
 
-		let arr = str.split('\n');
+		let arr = str.split( rowDelim );
 
 		let rows = str.length;
 
@@ -404,7 +417,7 @@ export class CharGrid {
 
 		for( let r = 0; r < rows; r++ ) {
 
-			let row = arr[r].split('');
+			let row = arr[r].split( cellDelim );
 
 			if ( row.length !== cols ) {
 				throw new Error('Inconsistent col length. Expected: ' + cols + '. Got ' + row.length +'.');

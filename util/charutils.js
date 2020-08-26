@@ -2,6 +2,10 @@
  * @const {RegExp} NonWord - matches nonword characters.
  */
 export const NonWord = /\W+/gi;
+/**
+ * @const {RegExp} WhiteSpace - regex matching whitespace.
+ */
+export const WhiteSpace = /\s+/gi;
 
 /**
  * Get length of longest word.

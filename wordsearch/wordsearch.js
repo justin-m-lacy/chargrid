@@ -10,6 +10,8 @@ export class WordSearch extends CharGrid {
 		// words stored in chargrid.
 		obj.words = this.words;
 
+		return obj;
+
 	}
 
 	/**
