@@ -1,7 +1,8 @@
-import { BuildOps } from "./buildOps";
+import { CASE_LOWER, CASE_UPPER, LowerChars, BLANK_CHAR } from "../consts";
+
 import {  isEmpty, NonWord } from "../util/charutils";
 import {  rand } from "../util/util";
-import { CASE_LOWER, CASE_UPPER, LowerChars, BLANK_CHAR } from "../consts";
+import { BuildOps } from "./buildOps";
 
 const NoDiagonals = [
 

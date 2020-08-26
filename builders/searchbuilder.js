@@ -1,8 +1,9 @@
+import { longest } from '../util/charutils';
+import { randInt } from "../util/util";
+
 import { Builder } from "./builder";
 import { WordSearch } from "../wordsearch/wordsearch";
 import { SearchOpts } from "../wordsearch/searchopts";
-import { longest } from '../util/charutils';
-import { randInt } from "../util/util";
 
 export class SearchBuilder extends Builder {
 
@@ -27,6 +28,7 @@ export class SearchBuilder extends Builder {
 
 		this.grid = this.createGrid( words );
 
+		console.log('placing words');
 		this._placeWords( words, this.grid );
 
 		this.fillEmpty();
@@ -51,6 +53,7 @@ export class SearchBuilder extends Builder {
 		}
 
 		this.unused = unused;
+		console.log('unused: ' + unused.length );
 
 	}
 
