@@ -1,6 +1,6 @@
 export const CASE_LOWER = 'lower';
 export const CASE_UPPER ='upper';
-export const ANY_CASE= 'any';
+export const CASE_ANY= 'any';
 
 /**
  * @const {char} BLANK_CHAR - default char to represent a blank space.

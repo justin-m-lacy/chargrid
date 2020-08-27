@@ -1,4 +1,4 @@
-import {CharGrid} from '../chargrid';
+import {CharGrid} from '../core/chargrid';
 import { SearchOpts } from './searchopts';
 
 export class WordSearch extends CharGrid {

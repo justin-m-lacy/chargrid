@@ -1,5 +1,6 @@
-import {  isEmpty, joinGrid } from "./util/charutils";
+import {  isEmpty, joinGrid } from "../util/charutils";
 import { RangeKey } from './range';
+import { CASE_LOWER, CASE_UPPER, CASE_ANY } from "../consts";
 
 
 export class CharGrid {
@@ -15,12 +16,6 @@ export class CharGrid {
 		};
 
 	}
-
-	/**
-	 * @property {string} title - title of game/grid.
-	 */
-	get title(){return this._title;}
-	set title(v){this._title=v}
 
 	/**
 	 * @property {BuildOpts} opts - build options.
@@ -65,6 +60,21 @@ export class CharGrid {
 		} else {
 
 			this.makeGrid( rows, cols );
+		}
+
+	}
+
+	/**
+	 * Set the case for all characters in grid.
+	 * @param {string} caps
+	 */
+	setCase( caps ){
+
+		if ( caps !== CASE_LOWER && caps !== CASE_UPPER ) return;
+
+		let func = caps === CASE_LOWER ? v=>v.toLocaleLowerCase() : v=>v.toLocaleUpperCase();
+		for( let r = this.rows.length-1; r>= 0; r-- ) {
+			this._chars[r] = this._chars[r].map( func );
 		}
 
 	}

@@ -28,7 +28,6 @@ export class SearchBuilder extends Builder {
 
 		this.grid = this.createGrid( words );
 
-		console.log('placing words');
 		this._placeWords( words, this.grid );
 
 		this.fillEmpty();
@@ -53,7 +52,6 @@ export class SearchBuilder extends Builder {
 		}
 
 		this.unused = unused;
-		console.log('unused: ' + unused.length );
 
 	}
 
