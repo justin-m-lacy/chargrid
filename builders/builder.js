@@ -1,8 +1,9 @@
 import { CASE_LOWER, CASE_UPPER, LowerChars, BLANK_CHAR } from "../consts";
 
-import {  isEmpty, NonWord } from "../util/charutils";
-import {  rand } from "../util/util";
+import {  isEmpty, longest, NonWord } from "../util/charutils";
+import {  rand, randInt } from "../util/util";
 import { BuildOps } from "./buildOps";
+import { CharGrid } from "../core/chargrid";
 
 const NoDiagonals = [
 
@@ -34,14 +35,19 @@ export class Builder {
 	/**
 	 * @property {CharGrid} grid - grid being built.
 	 */
-	get grid(){return this._puzzle.grid;}
-	set grid(v){this.puzzle.grid=v}
+	get grid(){return this._grid;}
+	set grid(v){
+		this._grid = this.puzzle.grid = v
+	}
 
 	/**
 	 * @property {Puzzle} puzzle - puzzle being built.
 	 */
 	get puzzle(){ return this._puzzle; }
-	set puzzle(v){this._puzzle=v}
+	set puzzle(v){
+		this._puzzle=v;
+		this._grid = v.grid;
+	}
 
 	/**
 	 * @property {BuildOps} opts
@@ -58,12 +64,27 @@ export class Builder {
 	get rows(){return this._grid.rows;}
 	get cols(){return this._grid.cols;}
 
+	/**
+	 * @property {boolean} built - true if a puzzle has been built.
+	 */
+	get built(){return this._built;}
+	set built(v){this._built=v}
+
 	constructor( opts=null, puzzle=null ){
 
 		this.opts = opts || new BuildOps();
 
 		this.puzzle = puzzle;
 
+		if ( this.puzzle && this.puzzle.grid ) {this.built = true;}
+
+	}
+
+	/**
+	 * Default does nothing. Override in subclass.
+	 */
+	build(){
+		this._built=true;
 	}
 
 	/**

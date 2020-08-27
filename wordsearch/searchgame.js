@@ -25,7 +25,7 @@ export class SearchGame {
 	/**
 	 * @property {WordSearch} grid - wordsearch grid.
 	 */
-	get grid(){return this.puzzle.grid; }
+	get grid(){return this._puzzle.grid; }
 
 	/**
 	 * @property {Object<string,WordState>} states - States of each word, position found,etc.

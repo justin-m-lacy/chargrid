@@ -8,6 +8,8 @@ export class SearchBuilder extends Builder {
 
 		super( opts || new SearchOpts(), puzzle || new WordSearch() );
 
+		this.unused=[];
+
 	}
 
 	/**
@@ -23,11 +25,13 @@ export class SearchBuilder extends Builder {
 		words = words.concat().sort((a,b)=>a.length-b.length);
 		this.prepareWords( words, this.opts );
 
-		this._puzzle.grid = this.createGrid( words );
+		this.grid = this.createGrid( words );
 
 		this._placeWords( words, this.grid );
 
 		this.fillEmpty();
+
+		this.built = true;
 
 		return this.grid;
 
