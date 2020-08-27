@@ -1,6 +1,7 @@
 import { CharGrid } from "../chargrid";
+import { Puzzle } from "../core/puzzle";
 
-export class Crossword extends CharGrid {
+export class Crossword extends Puzzle {
 
 	toJSON(){
 

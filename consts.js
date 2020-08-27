@@ -2,6 +2,8 @@ export const CASE_LOWER = 'lower';
 export const CASE_UPPER ='upper';
 export const CASE_ANY= 'any';
 
+export const TYPE_WORDSEARCH = 'wordsearch';
+
 /**
  * @const {char} BLANK_CHAR - default char to represent a blank space.
  */

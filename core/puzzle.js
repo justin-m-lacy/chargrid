@@ -42,6 +42,12 @@ export class Puzzle {
 	set type(v){this._type=v}
 
 	/**
+	 * @property {number} created - timestamp of date created.
+	 */
+	get created(){return this._created}
+	set created(v){this._created=v}
+
+	/**
 	 * @property {string} creator - id of creator.
 	 */
 	get creator(){return this._creator; }

@@ -10,7 +10,7 @@ export class SearchGame {
 	toJSON(){
 
 		return {
-			grid:this._grid,
+			puzzle:this._puzzle,
 			states:this._states,
 			time:this.time
 		}
@@ -18,9 +18,14 @@ export class SearchGame {
 	}
 
 	/**
+	 * @property {WordSearch} puzzle - wordsearch puzzle.
+	 */
+	get puzzle(){return this._puzzle }
+
+	/**
 	 * @property {WordSearch} grid - wordsearch grid.
 	 */
-	get grid(){return this._grid }
+	get grid(){return this.puzzle.grid; }
 
 	/**
 	 * @property {Object<string,WordState>} states - States of each word, position found,etc.
@@ -53,7 +58,7 @@ export class SearchGame {
 
 		if ( vars instanceof WordSearch ) {
 
-			this._grid = vars;
+			this._puzzle = vars;
 			this._remaining = 0;
 
 			this._states = this.makeStates( vars );
@@ -63,8 +68,8 @@ export class SearchGame {
 		} else {
 
 			// restore from JSON
-			this._grid = new WordSearch( vars.wordsearch );
-			this.reviveStates( this._grid, vars.states );
+			this._puzzle = new WordSearch( vars.wordsearch );
+			this.reviveStates( vars.states );
 
 			time = Number( vars.time || 0 );
 
@@ -80,7 +85,7 @@ export class SearchGame {
 	 */
 	tryMatch( range ) {
 
-		let word = this._grid.readWord(range);
+		let word = this.grid.readWord(range);
 
 		let state = this._states[word];
 		if ( !state ) {
@@ -97,7 +102,7 @@ export class SearchGame {
 
 	}
 
-	reviveStates( grid, states ){
+	reviveStates( states ){
 
 		// todo: fix errors compared to grid?
 
@@ -109,13 +114,13 @@ export class SearchGame {
 
 	}
 
-	makeStates( grid ){
+	makeStates( puzzle ){
 
 		this._remaining = 0;
 
 		let states = {};
 
-		let searchWords = grid.words;
+		let searchWords = puzzle.words;
 		for( let p of searchWords ) {
 
 			let s = states[p];

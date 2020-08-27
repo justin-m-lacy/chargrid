@@ -1,15 +1,12 @@
-import { longest } from '../util/charutils';
-import { randInt } from "../util/util";
-
 import { Builder } from "./builder";
 import { WordSearch } from "../wordsearch/wordsearch";
 import { SearchOpts } from "../wordsearch/searchopts";
 
 export class SearchBuilder extends Builder {
 
-	constructor( opts=null ){
+	constructor( opts=null, puzzle=null ){
 
-		super( opts || new SearchOpts() );
+		super( opts || new SearchOpts(), puzzle || new WordSearch() );
 
 	}
 
@@ -26,7 +23,7 @@ export class SearchBuilder extends Builder {
 		words = words.concat().sort((a,b)=>a.length-b.length);
 		this.prepareWords( words, this.opts );
 
-		this.grid = this.createGrid( words );
+		this._puzzle.grid = this.createGrid( words );
 
 		this._placeWords( words, this.grid );
 
@@ -36,7 +33,7 @@ export class SearchBuilder extends Builder {
 
 	}
 
-	_placeWords( words, grid ){
+	_placeWords( words ){
 
 		let unused = [];
 
@@ -47,50 +44,11 @@ export class SearchBuilder extends Builder {
 			if ( !this.tryPlace( w ) ) {
 				unused.push( w );
 			} else {
-				grid.words.push( w );
+				this._puzzle.words.push( w );
 			}
 		}
 
 		this.unused = unused;
-
-	}
-
-	/**
-	 * Create grid of appropriate size.
-	 */
-	createGrid( words ){
-
-		let opts = this.opts;
-
-		let rows = opts.rows;
-		let cols = opts.cols;
-
-		let maxWord = longest( words );
-
-		if ( !rows ) {
-
-			if ( opts.minRows && opts.maxRows ) rows = randInt( opts.minRows, opts.maxRows );
-			else if ( opts.minRows ) rows = opts.minRows;
-			else if ( opts.maxRows ) rows = opts.maxRows;
-			else rows = maxWord;
-
-		}
-		if ( !cols ) {
-
-			if ( opts.minCols && opts.maxCols ) cols = randInt( opts.minCols, opts.maxCols );
-			else if ( opts.minCols ) cols = opts.minCols;
-			else if ( opts.maxCols ) cols = opts.maxCols;
-			else cols = maxWord;
-
-		}
-
-		let search = new WordSearch( rows, cols );
-		search.opts = this.opts;
-
-		this.rows = rows;
-		this.cols = cols;
-
-		return search;
 
 	}
 

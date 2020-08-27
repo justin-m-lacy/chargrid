@@ -28,20 +28,20 @@ const AllDirs = NoDiagonals.concat([
  */
 export class Builder {
 
-	get conflicts(){return this._conflicts;}
-	set conflicts(v){this._conflicts=v}
+	/*get conflicts(){return this._conflicts;}
+	set conflicts(v){this._conflicts=v}*/
 
 	/**
 	 * @property {CharGrid} grid - grid being built.
 	 */
-	get grid(){return this._grid;}
-	set grid(v){this._grid=v}
+	get grid(){return this._puzzle.grid;}
+	set grid(v){this.puzzle.grid=v}
 
 	/**
-	 * @property {string[][]} chars
+	 * @property {Puzzle} puzzle - puzzle being built.
 	 */
-	get chars(){return this._chars;}
-	set chars(v){this._chars=v}
+	get puzzle(){ return this._puzzle; }
+	set puzzle(v){this._puzzle=v}
 
 	/**
 	 * @property {BuildOps} opts
@@ -55,28 +55,61 @@ export class Builder {
 	get unused(){ return this._unused;}
 	set unused(v){this._unused=v}
 
-	get rows(){return this._rows;}
-	set rows(v){this._rows=v}
+	get rows(){return this._grid.rows;}
+	get cols(){return this._grid.cols;}
 
-	get cols(){return this._cols;}
-	set cols(v){this._cols=v}
-
-	constructor( opts=null, grid=null ){
+	constructor( opts=null, puzzle=null ){
 
 		this.opts = opts || new BuildOps();
 
-		this.grid = grid;
+		this.puzzle = puzzle;
 
 	}
 
 	/**
-	 * Attempt to place a word randomly in the grid.
+	 * Create grid of appropriate size.
+	 */
+	createGrid( words ){
+
+		let opts = this.opts;
+
+		let rows = opts.rows;
+		let cols = opts.cols;
+
+		let maxWord = longest( words );
+
+		if ( !rows ) {
+
+			if ( opts.minRows && opts.maxRows ) rows = randInt( opts.minRows, opts.maxRows );
+			else if ( opts.minRows ) rows = opts.minRows;
+			else if ( opts.maxRows ) rows = opts.maxRows;
+			else rows = maxWord;
+
+		}
+		if ( !cols ) {
+
+			if ( opts.minCols && opts.maxCols ) cols = randInt( opts.minCols, opts.maxCols );
+			else if ( opts.minCols ) cols = opts.minCols;
+			else if ( opts.maxCols ) cols = opts.maxCols;
+			else cols = maxWord;
+
+		}
+
+		let grid = new CharGrid( rows, cols );
+		grid.opts = this.opts;
+
+		return grid;
+
+	}
+
+	/**
+	 * Attempt to place word randomly in the grid.
 	 * @param {string} word
 	 * @returns {boolean} true on success. false on failure.
 	 */
 	tryPlace( word ) {
 
-		if ( word.length > this._rows && word.length> this._cols ) return false;
+		if ( word.length > this.rows && word.length> this.cols ) return false;
 
 		let reverse = !this.opts.noReverse;
 		let dirs = this.opts.noDiagonal ? NoDiagonals : AllDirs;
@@ -122,7 +155,7 @@ export class Builder {
 	 */
 	tryPlaceDir( word, dr, dc, mustMatch=false ) {
 
-		let rows = this._rows, cols = this._cols;
+		let rows = this.rows, cols = this.cols;
 
 		// start placing at random position.
 		let r = rand( rows ), c = rand( cols );
@@ -197,8 +230,8 @@ export class Builder {
 		if ( this.opts.forceCase === CASE_LOWER ) filler = filler.toLocaleLowerCase();
 		else if ( this.opts.forceCase === CASE_UPPER ) filler = filler.toLocaleUpperCase();
 
-		let cols = this._cols;
-		let rows = this._rows;
+		let cols = this.cols;
+		let rows = this.rows;
 
 		for( let r = 0; r < rows; r++ ) {
 
@@ -220,8 +253,8 @@ export class Builder {
 	 */
 	fillAll( char=BLANK_CHAR ) {
 
-		let cols = this._cols;
-		let rows = this._rows;
+		let cols = this.cols;
+		let rows = this.rows;
 
 		let chars = this.grid.chars;
 
