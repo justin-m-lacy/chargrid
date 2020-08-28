@@ -56,6 +56,15 @@ export class SearchGame {
 	 */
 	constructor( vars=null ){
 
+		/**
+		 * Vue reactivity.
+		 */
+		this._states = null;
+		this._remaining = 0;
+		this._time = 0;
+		this._puzzle = null;
+
+
 		if (vars ) {
 
 			// restore from JSON

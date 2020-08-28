@@ -37,7 +37,8 @@ export class Builder {
 	 */
 	get grid(){return this._grid;}
 	set grid(v){
-		this._grid = this.puzzle.grid = v
+		console.log('SETTING NEW BUILDER GRID');
+		this.puzzle.grid = this._grid = v
 	}
 
 	/**
@@ -46,6 +47,7 @@ export class Builder {
 	get puzzle(){ return this._puzzle; }
 	set puzzle(v){
 		this._puzzle=v;
+		console.log('SETTING BUILDER PUZZLE');
 		if ( v ) this._grid = v.grid;
 	}
 

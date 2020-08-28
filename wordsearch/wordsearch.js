@@ -27,13 +27,14 @@ export class WordSearch extends Puzzle {
 		super();
 
 		this.type = TYPE_WORDSEARCH;
-		this._words = this._words || [];
 
 		if ( typeof rows === 'number') {
 			this.grid = new CharGrid( rows, cols );
 		} else if ( rows != null && typeof rows === 'object' ) {
 			this.revive(rows);
 		}
+		// Vue reactivity.
+		if (!this.words) this.words = null;
 
 	}
 

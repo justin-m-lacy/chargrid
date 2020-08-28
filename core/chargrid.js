@@ -1,6 +1,6 @@
 import {  isEmpty, joinGrid } from "../util/charutils";
 import { RangeKey } from './range';
-import { CASE_LOWER, CASE_UPPER, CASE_ANY } from "../consts";
+import { CASE_LOWER, CASE_UPPER } from "../consts";
 
 
 export class CharGrid {
