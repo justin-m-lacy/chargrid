@@ -56,26 +56,24 @@ export class SearchGame {
 	 */
 	constructor( vars=null ){
 
-		if ( vars instanceof WordSearch ) {
-
-			this._puzzle = vars;
-			this._remaining = 0;
-
-			this._states = this.makeStates( vars );
-
-			this.time = 0;
-
-		} else {
+		if (vars ) {
 
 			// restore from JSON
-			this._puzzle = new WordSearch( vars.wordsearch );
+			this._puzzle = new WordSearch( vars.puzzle );
 			this.reviveStates( vars.states );
 
 			time = Number( vars.time || 0 );
 
-
 		}
 
+	}
+
+	setPuzzle( ws ) {
+
+		this._puzzle = ( ws instanceof WordSearch ) ? ws : new WordSearch(ws);
+		this.time = 0;
+		this._states = this.makeStates(this._puzzle);
+		this._remaining = 0;
 	}
 
 	/**

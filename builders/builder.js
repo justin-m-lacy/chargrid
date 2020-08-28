@@ -46,7 +46,7 @@ export class Builder {
 	get puzzle(){ return this._puzzle; }
 	set puzzle(v){
 		this._puzzle=v;
-		this._grid = v.grid;
+		if ( v ) this._grid = v.grid;
 	}
 
 	/**
@@ -74,9 +74,10 @@ export class Builder {
 
 		this.opts = opts || new BuildOps();
 
+		this._built = false;
 		this.puzzle = puzzle;
 
-		if ( this.puzzle && this.puzzle.grid ) {this.built = true;}
+		//if ( this.puzzle && this.puzzle.grid ) {this.built = true;}
 
 	}
 

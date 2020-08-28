@@ -3,6 +3,10 @@
  */
 export class Puzzle {
 
+	toString(){
+		return 'untitled';
+	}
+
 	toJSON(){
 
 		return {
@@ -12,6 +16,7 @@ export class Puzzle {
 			title:this.title||undefined,
 			creator:this._creator||undefined,
 			difficulty:this._difficulty||undefined,
+			created:this.created,
 			grid:this._grid
 		}
 
@@ -54,7 +59,7 @@ export class Puzzle {
 	set creator(v){this._creator=v}
 
 	/**
-	 * @property {string} creator - id of creator.
+	 * @property {string} difficulty - puzzle difficulty.
 	 */
 	get difficulty(){return this._difficulty; }
 	set difficulty(v){this._difficulty=v}
@@ -65,8 +70,19 @@ export class Puzzle {
 	get grid(){return this._grid; }
 	set grid(v){this._grid=v}
 
-	constructor(){
+	constructor( vars=null ){
+
+		if ( vars ) {
+			this.revive(vars);
+		} else {
+
+			this.created = Date.now();
+		}
+
 	}
 
+	revive( vars ){
+		Object.assign( this, vars );
+	}
 
 }
