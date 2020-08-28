@@ -34,7 +34,7 @@ export class SearchBuilder extends Builder {
 
 		this.fillEmpty();
 
-		this.built = true;
+		super.build();
 
 		return this.puzzle;
 

@@ -508,7 +508,7 @@ export class CharGrid {
 	 */
 	reviveGrid( str, rowDelim='\n', cellDelim='' ) {
 
-		console.log('grid found: ' +str );
+		//console.log('grid found: ' +str );
 
 		let inRows = str.trim().split( rowDelim );
 		let outRows = [];
@@ -525,7 +525,6 @@ export class CharGrid {
 
 		for( let r = 0; r < rows; r++ ) {
 
-			console.log('row found: ' + inRows[r]);
 			let rowStr = inRows[r];
 			if ( rowStr == null || rowStr.length <= 0 ) continue;
 

@@ -38,7 +38,10 @@ export class Puzzle {
 	 * @property {string} title - title of game/grid.
 	 */
 	get title(){return this._title;}
-	set title(v){this._title=v}
+	set title(v){
+		//console.log('setting title: ' + v );
+		this._title=v
+	}
 
 	/**
 	 * @property {string} type - type of puzzle (wordsearch,crossword,etc.)
@@ -74,6 +77,13 @@ export class Puzzle {
 	}
 
 	constructor(){
+
+		this.title = '';
+		this.difficulty = '';
+		this.creator = '';
+		this.created = 0;
+		this.id = null;
+		this.url = null;
 
 		/*if ( vars ) {
 			this.revive(vars);

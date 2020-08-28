@@ -46,7 +46,6 @@ export class WordSearch extends Puzzle {
 		if ( json.opts ) this.opts = new SearchOpts(json.opts);
 
 		super.revive(json);
-
 		if ( json.words ) this._words = json.words;
 
 		if ( json.grid ) this.grid = new CharGrid( json.grid );

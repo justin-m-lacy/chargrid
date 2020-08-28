@@ -85,7 +85,14 @@ export class Builder {
 	 * Default does nothing. Override in subclass.
 	 */
 	build(){
+
+		if ( this.opts ) {
+			this.puzzle.title = this.opts.title;
+			this.puzzle.difficulty = this.opts.difficulty;
+		}
+
 		this._built=true;
+
 	}
 
 	/**

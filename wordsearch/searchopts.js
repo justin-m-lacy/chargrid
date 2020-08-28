@@ -9,8 +9,8 @@ export class SearchOpts extends BuildOps {
 	/**
 	 * @property {boolean} [noReverse=false] - prevent reverse words.
 	*/
-	get noReverse(){return this._noReverse}
-	set noReverse(v){this._noReverse=v;}
+	/*get noReverse(){return this._noReverse}
+	set noReverse(v){this._noReverse=v;}*/
 
 	/**
 	 * @property {number} [reverseRate=REVERSE_RATE] - rate at which to attempt to place
