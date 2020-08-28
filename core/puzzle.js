@@ -70,7 +70,6 @@ export class Puzzle {
 	get grid(){return this._grid; }
 	set grid(v){
 
-		console.log('SETTING NEW PUZZLE GRID');
 		this._grid=v
 	}
 

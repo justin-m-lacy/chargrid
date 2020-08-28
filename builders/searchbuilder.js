@@ -28,7 +28,6 @@ export class SearchBuilder extends Builder {
 		this.grid = this.createGrid( words );
 
 		// clear word list before placing new words.
-		console.log('CLEARING PUZZLE WORDS');
 		this.puzzle.words = [];
 
 		this._placeWords( words, this.grid );
