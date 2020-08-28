@@ -91,8 +91,8 @@ export class CharGrid {
 		let opts = this.opts;
 
 		this._chars = this.reviveGrid( json.chars,
-			opts ? opts.rowDelim : null,
-			opts ? opts.colDelim : null );
+			opts ? opts.rowDelim : undefined,
+			opts ? opts.colDelim : undefined );
 
 		this.title = json.title||'';
 
@@ -508,34 +508,40 @@ export class CharGrid {
 	 */
 	reviveGrid( str, rowDelim='\n', cellDelim='' ) {
 
-		let arr = str.split( rowDelim );
+		console.log('grid found: ' +str );
+
+		let inRows = str.trim().split( rowDelim );
+		let outRows = [];
 
 		let rows = str.length;
 
-		if ( rows === 0 ) {
+		if ( rows <= 0 ) {
 			throw new Error('Bad revived row size: ' + rows );
 		}
-		let cols = arr[0].length;
-		if ( cols === 0 ) {
+		let cols = inRows[0].length;
+		if ( cols <= 0 ) {
 			throw new Error('Bad revived col size: ' + cols );
 		}
 
 		for( let r = 0; r < rows; r++ ) {
 
-			let row = arr[r].split( cellDelim );
+			console.log('row found: ' + inRows[r]);
+			let rowStr = inRows[r];
+			if ( rowStr == null || rowStr.length <= 0 ) continue;
+
+			let row = rowStr.split( cellDelim );
 
 			if ( row.length !== cols ) {
 				throw new Error('Inconsistent col length. Expected: ' + cols + '. Got ' + row.length +'.');
 			}
 
-			arr[r] = row;
-
+			outRows.push(row);
 		}
 
-		this.rows = rows;
+		this.rows = outRows.length;
 		this.cols = cols;
 
-		return arr;
+		return outRows;
 
 	}
 

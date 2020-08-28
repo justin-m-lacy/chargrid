@@ -73,19 +73,27 @@ export class Puzzle {
 		this._grid=v
 	}
 
-	constructor( vars=null ){
+	constructor(){
 
-		if ( vars ) {
+		/*if ( vars ) {
 			this.revive(vars);
 		} else {
 
 			this.created = Date.now();
-		}
+		}*/
 
 	}
 
 	revive( vars ){
-		Object.assign( this, vars );
+
+		//Object.assign( this, vars );
+		this.id = vars.id || null;
+		this.difficulty = vars.difficulty || null;
+		this.title = vars.title || '';
+		this.creator = vars.creator || '';
+		this.url = vars.url || '';
+
+
 	}
 
 }
