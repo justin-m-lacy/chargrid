@@ -4,8 +4,9 @@ import {  isEmpty, longest, NonWord } from "../util/charutils";
 import {  rand, randInt } from "../util/util";
 import { BuildOps } from "./buildOps";
 import { CharGrid } from "../core/chargrid";
+import { Placement } from "../core/placement";
 
-const NoDiagonals = [
+export const NoDiagonals = [
 
 	{dr:1, dc:0},
 	{dr:0, dc:1}
@@ -17,7 +18,7 @@ const NoDiagonals = [
  * Negative directions aren't included since the word can
  * simply be placed in reverse instead.
  */
-const AllDirs = NoDiagonals.concat([
+export const AllDirs = NoDiagonals.concat([
 
 	{dr:1, dc:1},
 	{dr:1, dc:-1}
@@ -132,11 +133,96 @@ export class Builder {
 	}
 
 	/**
+	 *
+	 * @param {string} word - word being placed.
+	 * @param {Direction[]} dirs - valid directions for placement attempts.
+	 * @param {number} [quitAt=-1] - quit if the given number of matches is reached.
+	 * Defaults to length of word.
+	 */
+	placeBest( word, dirs, quitAt=-1 ) {
+
+		if ( word.length > this.rows && word.length > this.cols ) return false;
+
+		// best placement found, with cutOff matches set.
+		let best = new Placement( quitAt < 0 ? word.length : Math.min(quitAt, word.length ) );
+
+		let dirTries = dirs.length;
+		let i = rand( dirTries );
+
+		while ( dirTries-- > 0 ) {
+
+			let { dr, dc } = dirs[i];
+
+			// cutoff reached.
+			if ( this.bestDirFit( word, dr, dc, best ) ) {
+				break;
+			}
+
+			if ( --i < 0 ) i = dirs.length-1;
+
+		}
+
+		if ( best.isValid() ) {
+			this._grid._setChars( word, best.r,best.c,best.dr,best.dc);
+			return true;
+		}
+
+		return false;
+
+	}
+
+	/**
+	 * Attempt to place word anywhere in the grid with the given direction.
+	 * @param {string} word
+	 * @param {1|-1|0} dr - row direction.
+	 * @param {1|-1|0} dc - column direction.
+	 * @param {Placement} best - previous best placement.
+	 * @returns {boolean} true if better placement was found
+	 * than previous best placement.
+	 */
+	bestDirFit( word, dr, dc, best ) {
+
+		let minRow = 0, minCol = 0;
+		let maxRow = this.rows, maxCol = this.cols;
+
+		if ( dr > 0 ) maxRow = maxRow - word.length + 1;
+		else if ( dr < 0 ) minRow += word.length - 1;
+
+		if ( dc > 0 ) maxCol = maxCol - word.length + 1;
+		else if ( dc < 0 ) minCol += word.length - 1;
+
+		// random start position.
+		let r = randInt( minRow, maxRow ), c = rand( minCol, maxCol );
+
+		let maxTries = (maxRow-minRow)*(maxCol-minCol );
+
+		while( maxTries-- > 0 ) {
+
+			let matches = this._grid.countMatches( word, r, c, dr, dc );
+			if ( matches > best.matches ) {
+				best.setBest(r,c,dr,dc,matches);
+				if ( matches >= best.cutOff ) return true;
+			}
+
+			// @note advancement of r,c here has nothing to do with direction.
+			// It is just attempting to place the word at every grid space.
+			if ( --c < minCol ) {
+				c = maxCol-1;
+				if ( --r < minRow ) r=maxRow-1;
+			}
+
+		}
+
+		return false;
+
+	}
+
+	/**
 	 * Attempt to place word randomly in the grid.
 	 * @param {string} word
 	 * @returns {boolean} true on success. false on failure.
 	 */
-	tryPlace( word ) {
+	randPlace( word ) {
 
 		if ( word.length > this.rows && word.length> this.cols ) return false;
 

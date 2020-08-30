@@ -281,6 +281,43 @@ export class CharGrid {
 	}
 
 	/**
+	 * Counts number of times a word placement matches characters already placed
+	 * in the grid.
+	 * If any placed character would conflict with a previously placed character,
+	 * -1 is returned.
+	 * @param {string} word
+	 * @param {number} r - valid grid row.
+	 * @param {number} c - valid grid colum.
+	 * @param {1|-1|0} rDir - row-direction of word placement.
+	 * @param {1|-1|0} cDir - column-direction of word placement.
+	 * @returns {number} number of characters placed word matches, or -1 for a conflict.
+	 */
+	countMatches( word, r, c, rDir, cDir ) {
+
+		let len = word.length;
+		let a = this._chars;
+
+		let matches = 0;
+
+		for( let i = 0; i < len; i++ ) {
+
+			let chr = a[r][c];
+			if ( !isEmpty(chr) ) {
+
+				if ( chr !== word[i] ) return -1;
+				matches++;
+			}
+
+			r += rDir;
+			c += cDir;
+
+		}
+
+		return matches;
+
+	}
+
+	/**
 	 * Determine if word placed at point in direction will conflict
 	 * with existing characters.
 	 * @param {string} word

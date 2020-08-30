@@ -1,9 +1,7 @@
 export * from './consts';
 export * from './util/charutils';
 
-export {Coord} from './core/coord';
 export {Direction} from './core/direction';
-export {Conflict} from './conflict';
 export { Range } from './core/range';
 
 export {CharGrid} from './core/chargrid';

@@ -82,7 +82,6 @@ export class SearchGame {
 		this._puzzle = ( ws instanceof WordSearch ) ? ws : new WordSearch(ws);
 		this.time = 0;
 		this._states = this.makeStates(this._puzzle);
-		this._remaining = 0;
 	}
 
 	/**
@@ -113,17 +112,20 @@ export class SearchGame {
 
 		// todo: fix errors compared to grid?
 
+		let remaining = 0;
 		for( let p in states ) {
 
 			states[p] = new WordState( states[p] );
+			remaining += states[p].remaining;
 
 		}
+		this._remaining = remaining;
 
 	}
 
 	makeStates( puzzle ){
 
-		this._remaining = 0;
+		let remaining = 0;
 
 		let states = {};
 
@@ -137,9 +139,11 @@ export class SearchGame {
 				//console.log('init state: ' + p );
 				states[p] = new WordState();
 			}
-			this._remaining++;
+			remaining++;
 
 		}
+
+		this._remaining = remaining;
 
 		return states;
 

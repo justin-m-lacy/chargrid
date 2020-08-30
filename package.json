@@ -12,5 +12,8 @@
     "url": "https://github.com/lerpinglemur/chargrid.git"
   },
   "author": "Justin Lacy",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "objecty": "^1.0.4"
+  }
 }

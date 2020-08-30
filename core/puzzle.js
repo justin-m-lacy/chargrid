@@ -16,7 +16,6 @@ export class Puzzle {
 			title:this.title||undefined,
 			creator:this._creator||undefined,
 			difficulty:this._difficulty||undefined,
-			created:this.created,
 			grid:this._grid
 		}
 
@@ -71,10 +70,10 @@ export class Puzzle {
 	 * @property {CharGrid} grid - rows in puzzle.
 	 */
 	get grid(){return this._grid; }
-	set grid(v){
+	set grid(v){ this._grid=v }
 
-		this._grid=v
-	}
+	get rows(){return this._grid.rows;}
+	get cols(){return this._grid.cols;}
 
 	constructor(){
 

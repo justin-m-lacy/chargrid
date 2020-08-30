@@ -1,4 +1,4 @@
-import { Builder } from "./builder";
+import { Builder, NoDiagonals, AllDirs } from "./builder";
 import { WordSearch } from "../wordsearch/wordsearch";
 import { SearchOpts } from "../wordsearch/searchopts";
 
@@ -43,15 +43,25 @@ export class SearchBuilder extends Builder {
 	_placeWords( words ){
 
 		let unused = [];
+		let placed = this._puzzle.words;
+
+		let dirs = this.opts.noDiagonal ? NoDiagonals : AllDirs;
+		if ( !opts.noReverse ) {
+
+			// add reverse directions. TODO: this doesn't allow a reverse rate.
+			dirs = dirs.concat( dirs.map(obj=>{
+				return {dr:-obj.dr, dc:-obj.dc}
+			}) );
+		}
 
 		for( let i = words.length-1; i >= 0; i-- ) {
 
 			let w = words[i];
 
-			if ( !this.tryPlace( w ) ) {
+			if ( !this.bestPlace( w, dirs, placed.length ) ) {
 				unused.push( w );
 			} else {
-				this._puzzle.words.push( w );
+				placed.push( w );
 			}
 		}
 
