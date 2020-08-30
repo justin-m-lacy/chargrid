@@ -285,6 +285,7 @@ export class CharGrid {
 	 * in the grid.
 	 * If any placed character would conflict with a previously placed character,
 	 * -1 is returned.
+	 * -1 is also returned if an identical word has already been placed in this position.
 	 * @param {string} word
 	 * @param {number} r - valid grid row.
 	 * @param {number} c - valid grid colum.
@@ -294,12 +295,17 @@ export class CharGrid {
 	 */
 	countMatches( word, r, c, rDir, cDir ) {
 
-		let len = word.length;
+		let len = word.length-1;
+
+		if ( this._ranges.has( RangeKey(r,c,r+len*rDir,c+len*cDir) )) {
+			return -1;
+		}
+
 		let a = this._chars;
 
 		let matches = 0;
 
-		for( let i = 0; i < len; i++ ) {
+		for( let i = 0; i <= len; i++ ) {
 
 			let chr = a[r][c];
 			if ( !isEmpty(chr) ) {

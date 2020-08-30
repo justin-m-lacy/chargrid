@@ -30,7 +30,7 @@ export class Placement {
 
 	constructor( cutOff=0 ){
 
-		this._matches=0;
+		this._matches=-1;
 		this.cutOff = cutOff;
 
 		// indicates no valid placement.
@@ -39,7 +39,7 @@ export class Placement {
 
 	}
 
-	isValid(){return this._row >=0&&this._col>=0;}
+	isValid(){return this._matches>=0;}
 
 	setBest(r,c,dr,dc,matches ) {
 

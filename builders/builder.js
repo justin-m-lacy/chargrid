@@ -163,7 +163,8 @@ export class Builder {
 		}
 
 		if ( best.isValid() ) {
-			this._grid._setChars( word, best.r,best.c,best.dr,best.dc);
+			//console.log('BEST: ' + best.row + ','+ best.col );
+			this._grid._setChars( word, best.row,best.col,best.dr,best.dc);
 			return true;
 		}
 
@@ -200,6 +201,7 @@ export class Builder {
 
 			let matches = this._grid.countMatches( word, r, c, dr, dc );
 			if ( matches > best.matches ) {
+				//console.log('NEW BEST: ' + matches );
 				best.setBest(r,c,dr,dc,matches);
 				if ( matches >= best.cutOff ) return true;
 			}

@@ -46,7 +46,7 @@ export class SearchBuilder extends Builder {
 		let placed = this._puzzle.words;
 
 		let dirs = this.opts.noDiagonal ? NoDiagonals : AllDirs;
-		if ( !opts.noReverse ) {
+		if ( !this.opts.noReverse ) {
 
 			// add reverse directions. TODO: this doesn't allow a reverse rate.
 			dirs = dirs.concat( dirs.map(obj=>{
@@ -58,7 +58,7 @@ export class SearchBuilder extends Builder {
 
 			let w = words[i];
 
-			if ( !this.bestPlace( w, dirs, placed.length ) ) {
+			if ( !this.placeBest( w, dirs, placed.length ) ) {
 				unused.push( w );
 			} else {
 				placed.push( w );
