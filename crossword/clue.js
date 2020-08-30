@@ -1,5 +1,6 @@
 import { Word } from "../word";
 import { DIR_ACROSS } from "../consts";
+import {defineVars} from 'objecty';
 
 export class Clue extends Word {
 
@@ -23,6 +24,9 @@ export class Clue extends Word {
 	constructor( vars=null ){
 
 		super(vars);
+
+		// define undefined vars for Vue reactivity.
+		defineVars( this );
 
 	}
 

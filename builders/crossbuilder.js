@@ -1,4 +1,4 @@
-import { Builder, NoDiagonals, AllDirs } from "./builder";
+import { Builder, NoDiagonals } from "./builder";
 import { Crossword } from "../crossword/crossword";
 import { BuildOpts } from "./buildOpts";
 
@@ -8,8 +8,8 @@ export class CrossBuilder extends Builder {
 
 		super( opts || new BuildOpts(), puzzle || new Crossword() );
 
-		opts.noDiagonal = true;
-		opts.noReverse = true;
+		this.opts.noDiagonal = true;
+		this.opts.noReverse = true;
 
 		this.unused=[];
 
@@ -34,7 +34,7 @@ export class CrossBuilder extends Builder {
 		do {
 
 			this.grid.clearRanges();
-			this._placeWords( words, this.grid );
+			this._placeClues( words, this.grid );
 
 		} while ( --tries > 0 );
 
@@ -73,29 +73,34 @@ export class CrossBuilder extends Builder {
 
 	}
 
-	_placeWords( words ){
+	_placeClues( clues ){
 
 		let unused = [];
 		let placed = this._puzzle.clues = [];
 
-		let dirs = this.opts.noDiagonal ? NoDiagonals : AllDirs;
-		if ( !this.opts.noReverse ) {
+		let dirs = NoDiagonals;
 
-			// add reverse directions. TODO: this doesn't allow a reverse rate.
-			dirs = dirs.concat( dirs.map(obj=>{
-				return {dr:-obj.dr, dc:-obj.dc}
-			}) );
-		}
+		for( let i = clues.length-1; i >= 0; i-- ) {
 
-		for( let i = words.length-1; i >= 0; i-- ) {
+			let clue = clues[i];
 
-			let w = words[i];
+			let place = this.placeBest( clue.word, dirs );
+			if ( place == null ) {
 
-			if ( !this.placeBest( w, dirs ) ) {
-				unused.push( w );
+				clue.row = clue.col = -1;
+				unused.push(clue);
+
 			} else {
-				placed.push( w );
+
+				clue.row = placed.row;
+				clue.col = placed.col;
+				if ( placed.dc !== 0 ) clue.direction = 'across';
+				else clue.direction = 'down';
+
+				placed.push(clue);
+
 			}
+
 		}
 
 		this.unused = unused;

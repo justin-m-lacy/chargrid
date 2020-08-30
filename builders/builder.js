@@ -163,10 +163,10 @@ export class Builder {
 		if ( best.isValid() ) {
 			//console.log('BEST: ' + best.row + ','+ best.col );
 			this._grid._setChars( word, best.row,best.col,best.dr,best.dc);
-			return true;
+			return best;
 		}
 
-		return false;
+		return null;
 
 	}
 
@@ -306,6 +306,33 @@ export class Builder {
 		}
 
 		return false;
+
+	}
+
+	/**
+	 * Fill empty spaces with random characters.
+	 */
+	fillEmpty( fillChars=BLANK_CHAR ) {
+
+		let chars = this.grid.chars;
+
+		if ( this.opts.forceCase === CASE_LOWER ) fillChars = fillChars.toLocaleLowerCase();
+		else if ( this.opts.forceCase === CASE_UPPER ) fillChars = fillChars.toLocaleUpperCase();
+
+		let cols = this.cols;
+		let rows = this.rows;
+
+		for( let r = 0; r < rows; r++ ) {
+
+			let a = chars[r];
+			for( let c = 0; c < cols; c++ ) {
+
+				if ( !isEmpty(a[c])) continue;
+				a[c] = fillChars[ Math.floor( fillChars.length*Math.random() ) ];
+
+			}
+
+		}
 
 	}
 
