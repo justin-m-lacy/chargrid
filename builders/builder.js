@@ -201,9 +201,11 @@ export class Builder {
 
 			let matches = this._grid.countMatches( word, r, c, dr, dc );
 			if ( matches > best.matches ) {
-				//console.log('NEW BEST: ' + matches );
+
 				best.setBest(r,c,dr,dc,matches);
-				if ( matches >= best.cutOff ) return true;
+				if ( matches >= best.cutOff ) {
+					return true;
+				}
 			}
 
 			// @note advancement of r,c here has nothing to do with direction.

@@ -1,4 +1,3 @@
-import { CharGrid } from "../chargrid";
 import { Puzzle } from "../core/puzzle";
 
 export class Crossword extends Puzzle {

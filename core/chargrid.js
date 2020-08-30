@@ -64,6 +64,10 @@ export class CharGrid {
 
 	}
 
+	clearRanges(){
+		this._ranges.clear();
+	}
+
 	/**
 	 * Set the case for all characters in grid.
 	 * @param {string} caps
@@ -296,14 +300,14 @@ export class CharGrid {
 	countMatches( word, r, c, rDir, cDir ) {
 
 		let len = word.length-1;
-
-		if ( this._ranges.has( RangeKey(r,c,r+len*rDir,c+len*cDir) )) {
-			return -1;
-		}
-
 		let a = this._chars;
 
 		let matches = 0;
+
+		// duplicate word placement. this could be placed outside countMatches() as well.
+		if ( this._ranges.has( RangeKey(r,c,r+len*rDir,c+len*cDir) )) {
+			return -1;
+		}
 
 		for( let i = 0; i <= len; i++ ) {
 
@@ -418,7 +422,6 @@ export class CharGrid {
 	resize( rows, cols) {
 
 		if ( rows <= 0 || cols <= 0 ) throw new Error('Invalid Size: ' + rows +',' + cols );
-		console.log('RESIZE TO: ' + rows+','+cols);
 
 		var arr = this.chars;
 

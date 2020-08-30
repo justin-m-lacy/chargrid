@@ -26,9 +26,7 @@ export class SearchBuilder extends Builder {
 		this.prepareWords( words, this.opts );
 
 		this.grid = this.createGrid( words );
-
-		// clear word list before placing new words.
-		this.puzzle.words = [];
+		//this.grid.clearRanges();
 
 		this._placeWords( words, this.grid );
 
@@ -43,7 +41,7 @@ export class SearchBuilder extends Builder {
 	_placeWords( words ){
 
 		let unused = [];
-		let placed = this._puzzle.words;
+		let placed = this._puzzle.words = [];
 
 		let dirs = this.opts.noDiagonal ? NoDiagonals : AllDirs;
 		if ( !this.opts.noReverse ) {
@@ -58,7 +56,7 @@ export class SearchBuilder extends Builder {
 
 			let w = words[i];
 
-			if ( !this.placeBest( w, dirs, placed.length ) ) {
+			if ( !this.placeBest( w, dirs ) ) {
 				unused.push( w );
 			} else {
 				placed.push( w );
