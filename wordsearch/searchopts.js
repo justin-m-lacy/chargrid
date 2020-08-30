@@ -1,10 +1,10 @@
-import { BuildOps } from "../builders/buildOps";
+import { BuildOpts } from "../builders/buildOpts";
 import { REVERSE_RATE } from "../consts";
 
 /**
  * Options for WordSearch game.
  */
-export class SearchOpts extends BuildOps {
+export class SearchOpts extends BuildOpts {
 
 	/**
 	 * @property {boolean} [noReverse=false] - prevent reverse words.

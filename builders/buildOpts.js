@@ -1,4 +1,4 @@
-export class BuildOps {
+export class BuildOpts {
 
 	/**
 	 * @property {boolean} [noReverse=false] - prevent reverse words.
