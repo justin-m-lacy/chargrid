@@ -42,29 +42,11 @@ export class CrossBuilder extends Builder {
 
 		this.fillEmpty();
 
+		this.puzzle.assignNums();
+
 		super.build();
 
 		return this.puzzle;
-
-	}
-
-	/**
-	 * Assign clues numbers based on their positions in the crossword.
-	 * 23D, etc.
-	 */
-	numberClues(){
-
-		let rows = this.grid.rows, cols = this.grid.cols;
-
-		let num = 1;
-
-		for( let r = 0; r < rows; r++ ) {
-
-			for( let c = 0; c < cols; c++ ) {
-
-			}
-
-		}
 
 	}
 

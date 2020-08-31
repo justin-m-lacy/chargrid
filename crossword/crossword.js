@@ -63,6 +63,40 @@ export class Crossword extends Puzzle {
 
 	}
 
+	/**
+	 * Sorts clues by row,col and assigns clue numbers.
+	 */
+	assignNums(){
+
+		this.sortClues();
+
+		let num = 0;
+		let lastR = -1, lastC = -1;
+
+		let len = this._clues.length;
+		for( let i = 0; i < len; i++ ) {
+
+			let cl = this._clues[i];
+			if ( cl.row !== lastR || cl.col !== lastC ) {
+				// across/down clues can share a number.
+				num++;
+				lastR = cl.row;
+				lastC = cl.col;
+			}
+			cl.num = num;
+
+		}
+
+	}
+
+	sortClues(){
+
+		this._clues.sort( (cl1,cl2)=>{
+			return (cl1.row !== cl2.row ) ? cl1.row - cl2.row : cl1.col - cl2.col;
+		});
+
+	}
+
 	clearPlaced(){
 
 		// not vue reactive.
@@ -71,6 +105,7 @@ export class Crossword extends Puzzle {
 		this._clues.length = 0;
 
 	}
+
 	/**
 	 *
 	 * @param {number} r
