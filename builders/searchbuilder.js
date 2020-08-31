@@ -25,10 +25,11 @@ export class SearchBuilder extends Builder {
 
 		// fit large words first.
 		words = words.concat().sort((a,b)=>a.length-b.length);
+
+		this.puzzle.clearPlaced();
 		this.prepareWords( words, this.opts );
 
 		this.createGrid( words );
-		//this.grid.clearPlaced();
 
 		this._placeWords( words, this.grid );
 
@@ -70,7 +71,7 @@ export class SearchBuilder extends Builder {
 	_placeWords( words ){
 
 		let unused = [];
-		let words = this._puzzle.words = [];
+		let used = this._puzzle.words = [];
 
 		let dirs = this.opts.noDiagonal ? NoDiagonals : AllDirs;
 		if ( !this.opts.noReverse ) {
@@ -85,11 +86,13 @@ export class SearchBuilder extends Builder {
 
 			let w = words[i];
 
-			if ( !this.placeBest( w, dirs ) ) {
+			// note: using used.length here makes it less likely for
+			// begin/end portions of words to overlap. e.g. airport & portal sharing 'port'
+			let place = this.placeBest( w, dirs, used.length );
+			if ( place === null ) {
 				unused.push( w );
 			} else {
-
-				this._puzzle.setPlace( w, place );
+				this._puzzle.placeItem( w, place );
 
 			}
 		}

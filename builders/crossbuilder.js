@@ -116,10 +116,7 @@ export class CrossBuilder extends Builder {
 
 				clue.row = placed.row;
 				clue.col = placed.col;
-				if ( placed.dc !== 0 ) clue.direction = 'across';
-				else clue.direction = 'down';
-
-				placed.push(clue);
+				this._puzzle.placeItem( clue, place );
 
 			}
 

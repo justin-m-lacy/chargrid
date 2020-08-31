@@ -44,15 +44,29 @@ export class Crossword extends Puzzle {
 	 */
 	canPlace( word, r, c, endR, endC ) {
 
-		if ( dc !== 0 ) {
+		/**
+		 * NOTE: This order must match placeClue() below for consistency.
+		 * Across is the fallback so edge-case 1-length words are considered
+		 * 'across' not 'down'
+		 */
+		if ( dr !== 0 ) {
+			return this.canPlaceDown( c, r, endR );
+
+		} else {
 			// across
 			return this.canPlaceAcross( r, c, endC );
-		} else {
-			return this.canPlaceDown( c, r, endR );
 		}
 
 	}
 
+	clearPlaced(){
+
+		// not vue reactive.
+		this._down.length = 0;
+		this._across.length = 0;
+		this._clues.length = 0;
+
+	}
 	/**
 	 *
 	 * @param {number} r
@@ -115,11 +129,20 @@ export class Crossword extends Puzzle {
 
 	}
 
-	setPlace( clue, place ) {
+	placeItem( clue, place ) {
 
-		if ( place.dc !== 0 ) {
+		if ( place.dr !== 0 ) {
+
+			clue.direction = 'down';
+			this.insertDown(clue);
+
+		} else {
+
+			clue.direction = 'across';
 			this.insertAcross(clue);
-		} else this.insertDown(clue);
+		}
+
+		this._clues.push(clue);
 
 	}
 

@@ -72,8 +72,8 @@ export class Puzzle {
 	 */
 	get grid(){return this._grid; }
 
-	get rows(){return this._grid.rows;}
-	get cols(){return this._grid.cols;}
+	get rows(){ return this._grid ? this._grid.rows : -1; }
+	get cols(){ return this._grid ? this._grid.cols : -1; }
 
 	constructor(){
 
@@ -86,13 +86,6 @@ export class Puzzle {
 
 		defineVars( this );
 
-		/*if ( vars ) {
-			this.revive(vars);
-		} else {
-
-			this.created = Date.now();
-		}*/
-
 	}
 
 	/**
@@ -103,7 +96,7 @@ export class Puzzle {
 	initGrid(rows, cols) {
 
 		this._grid = new CharGrid(rows,cols);
-		this._grid.canPlace = this.canPlace;
+		this._grid.canPlace = this.canPlace.bind(this);
 
 		return this._grid;
 

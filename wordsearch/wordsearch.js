@@ -37,6 +37,8 @@ export class WordSearch extends Puzzle {
 
 		this.type = TYPE_WORDSEARCH;
 
+		this._placed = new Map();
+
 		if ( typeof rows === 'number') {
 			this.initGrid( rows, cols );
 		} else if ( rows != null && typeof rows === 'object' ) {
@@ -63,7 +65,17 @@ export class WordSearch extends Puzzle {
 
 	}
 
-	setPlace( word, place ) {
+	/**
+	 * Clear all placed words.
+	 */
+	clearPlaced(){
+
+		if ( this._words ) this._words.length = [];
+		if ( this._placed ) this.placed.clear();
+
+	}
+
+	placeItem( word, place ) {
 
 		this._words.push(word);
 
@@ -74,7 +86,7 @@ export class WordSearch extends Puzzle {
 
 	canPlace( word, r, c, endR, endC ) {
 
-		return this._placed.has( RangeKey(r,c, endR, endC ) );
+		return !this._placed.has( RangeKey(r,c, endR, endC ) );
 	}
 
 	has( w ){ return this.words.includes(w); }
