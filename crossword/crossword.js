@@ -48,6 +48,7 @@ export class Crossword extends Puzzle {
 	 */
 	canPlace( word, r, c, endR, endC ) {
 
+		console.log('ChECKING CAN PLACE CROSSWORD');
 		/**
 		 * NOTE: This order must match placeClue() below for consistency.
 		 * Across is the fallback so edge-case 1-length words are considered
@@ -135,6 +136,9 @@ export class Crossword extends Puzzle {
 
 	placeItem( clue, place ) {
 
+		clue.row = place.row;
+		clue.col = place.col;
+
 		if ( place.dr !== 0 ) {
 
 			clue.direction = 'down';
@@ -166,7 +170,8 @@ export class Crossword extends Puzzle {
 			if ( cur.row > r ) continue;
 			else if ( cur.row === r && cur.col >= clue.col ) continue;
 
-			a.splice( i, 0, clue );
+			a.splice( i+1, 0, clue );
+			return;
 
 		}
 
@@ -188,7 +193,8 @@ export class Crossword extends Puzzle {
 			if ( cur.col > c ) continue;
 			else if ( cur.col === c && cur.row >= clue.row ) continue;
 
-			a.splice( i, 0, clue );
+			a.splice( i+1, 0, clue );
+			return;
 
 		}
 

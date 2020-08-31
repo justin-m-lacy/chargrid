@@ -114,8 +114,6 @@ export class CrossBuilder extends Builder {
 
 			} else {
 
-				clue.row = placed.row;
-				clue.col = placed.col;
 				this._puzzle.placeItem( clue, place );
 
 			}
