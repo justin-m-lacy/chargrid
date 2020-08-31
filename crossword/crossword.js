@@ -48,7 +48,6 @@ export class Crossword extends Puzzle {
 	 */
 	canPlace( word, r, c, endR, endC ) {
 
-		console.log('ChECKING CAN PLACE CROSSWORD');
 		/**
 		 * NOTE: This order must match placeClue() below for consistency.
 		 * Across is the fallback so edge-case 1-length words are considered
@@ -164,16 +163,18 @@ export class Crossword extends Puzzle {
 		let a = this._across;
 
 		let r = clue.row;
-		for( let i = a.length-1; i >= 0; i-- ) {
+		let i = a.length-1;
+		for( ; i >= 0; i-- ) {
 
 			let cur = a[i];
 			if ( cur.row > r ) continue;
 			else if ( cur.row === r && cur.col >= clue.col ) continue;
 
-			a.splice( i+1, 0, clue );
-			return;
+			break;
 
 		}
+
+		a.splice( i+1, 0, clue );
 
 	}
 
@@ -187,16 +188,17 @@ export class Crossword extends Puzzle {
 		let a = this._down;
 
 		let c = clue.col;
-		for( let i = a.length-1; i >= 0; i-- ) {
+		let i = a.length-1;
+		for( ; i >= 0; i-- ) {
 
 			let cur = a[i];
 			if ( cur.col > c ) continue;
 			else if ( cur.col === c && cur.row >= clue.row ) continue;
 
-			a.splice( i+1, 0, clue );
-			return;
+			break;
 
 		}
+		a.splice( i+1, 0, clue );
 
 	}
 

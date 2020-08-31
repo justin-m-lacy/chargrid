@@ -102,6 +102,9 @@ export class Puzzle {
 
 	}
 
+	/**
+	 * Override in subclass.
+	 */
 	canPlace(){return true;}
 
 	revive( vars ){
