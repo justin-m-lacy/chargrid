@@ -59,10 +59,6 @@ export class WordSearch extends Puzzle {
 		super.revive(json);
 		if ( json.words ) this._words = json.words;
 
-		if ( json.grid ) this.initGrid( json.grid );
-		else throw new Error('Missing wordsearch grid.');
-
-
 	}
 
 	/**

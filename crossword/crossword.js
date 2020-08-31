@@ -2,7 +2,12 @@ import { Puzzle } from "../core/puzzle";
 
 export class Crossword extends Puzzle {
 
-	toJSON(){
+	toJSON() {
+
+		let obj = super.toJSON();
+
+		obj.across = this.across;
+		obj.down = this.down;
 
 	}
 
@@ -34,6 +39,29 @@ export class Crossword extends Puzzle {
 		this._down = [];
 		this._across = [];
 		this._clues = [];
+
+		if ( typeof rows === 'object' ) {
+			this.revive(rows);
+		}
+	}
+
+	revive(obj) {
+
+		super.revive(obj);
+
+		let across = vars.across;
+		for( let i = 0; i < across.length; i++ ) {
+			across[i] = new Clue(across[i]);
+		}
+		for( let i = 0; i < down.length;i++){
+			down[i] = new Clue(down[i]);
+		}
+
+		this.across = across;
+		this.down = down;
+
+		this.clues = across.concat( down );
+		this.sortClues();
 
 	}
 

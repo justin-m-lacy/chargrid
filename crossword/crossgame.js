@@ -51,6 +51,7 @@ export class CrossGame {
 
 			this._puzzle = vars;
 			this.entries = this.makeEntries( vars, this._puzzle.grid );
+			this.time = 0;
 
 
 		} else {
@@ -58,7 +59,7 @@ export class CrossGame {
 			this._puzzle = new Crossword( vars.crossword );
 			this.reviveEntries( this._grid, vars.entries );
 
-			time = Number(vars.time||0);
+			this.time = Number(vars.time||0);
 
 		}
 

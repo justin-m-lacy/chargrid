@@ -117,7 +117,8 @@ export class Puzzle {
 		this.creator = vars.creator || '';
 		this.url = vars.url || '';
 
-
+		if ( vars.grid ) this.initGrid( vars.grid );
+		else throw new Error('Missing wordsearch grid.');
 	}
 
 }
