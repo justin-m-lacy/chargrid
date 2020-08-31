@@ -1,11 +1,12 @@
+import {defineVars } from 'objecty';
+import { CharGrid } from './chargrid';
+
 /**
  * @class Puzzle Information about a puzzle.
  */
 export class Puzzle {
 
-	toString(){
-		return 'untitled';
-	}
+	toString(){ return 'untitled'; }
 
 	toJSON(){
 
@@ -70,7 +71,6 @@ export class Puzzle {
 	 * @property {CharGrid} grid - rows in puzzle.
 	 */
 	get grid(){return this._grid; }
-	set grid(v){ this._grid=v }
 
 	get rows(){return this._grid.rows;}
 	get cols(){return this._grid.cols;}
@@ -84,6 +84,8 @@ export class Puzzle {
 		this.id = null;
 		this.url = null;
 
+		defineVars( this );
+
 		/*if ( vars ) {
 			this.revive(vars);
 		} else {
@@ -92,6 +94,22 @@ export class Puzzle {
 		}*/
 
 	}
+
+	/**
+	 *
+	 * @param {number|object} rows
+	 * @param {number|null} cols
+	 */
+	initGrid(rows, cols) {
+
+		this._grid = new CharGrid(rows,cols);
+		this._grid.canPlace = this.canPlace;
+
+		return this._grid;
+
+	}
+
+	canPlace(){return true;}
 
 	revive( vars ){
 

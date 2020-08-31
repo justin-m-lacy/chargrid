@@ -2,7 +2,7 @@ import { Builder, NoDiagonals, AllDirs } from "./builder";
 import { WordSearch } from "../wordsearch/wordsearch";
 import { SearchOpts } from "../wordsearch/searchopts";
 import {  isEmpty, NonWord } from "../util/charutils";
-import { CASE_LOWER, CASE_UPPER, LowerChars, BLANK_CHAR } from "../consts";
+import { CASE_LOWER, CASE_UPPER, LowerChars } from "../consts";
 
 export class SearchBuilder extends Builder {
 
@@ -27,8 +27,8 @@ export class SearchBuilder extends Builder {
 		words = words.concat().sort((a,b)=>a.length-b.length);
 		this.prepareWords( words, this.opts );
 
-		this.grid = this.createGrid( words );
-		//this.grid.clearRanges();
+		this.createGrid( words );
+		//this.grid.clearPlaced();
 
 		this._placeWords( words, this.grid );
 
@@ -70,7 +70,7 @@ export class SearchBuilder extends Builder {
 	_placeWords( words ){
 
 		let unused = [];
-		let placed = this._puzzle.words = [];
+		let words = this._puzzle.words = [];
 
 		let dirs = this.opts.noDiagonal ? NoDiagonals : AllDirs;
 		if ( !this.opts.noReverse ) {
@@ -88,7 +88,10 @@ export class SearchBuilder extends Builder {
 			if ( !this.placeBest( w, dirs ) ) {
 				unused.push( w );
 			} else {
-				placed.push( w );
+
+				this._puzzle.setPlace( w, place );
+				words.push( w );
+
 			}
 		}
 

@@ -1,6 +1,6 @@
-import { BLANK_CHAR } from "../consts";
+import { BLANK_CHAR, CASE_LOWER, CASE_UPPER } from "../consts";
 
-import { longest } from "../util/charutils";
+import { longest, isEmpty } from "../util/charutils";
 import { rand, randInt } from "../util/util";
 import { BuildOpts } from "./buildOpts";
 import { CharGrid } from "../core/chargrid";
@@ -35,9 +35,9 @@ export class Builder {
 
 	/**
 	 * @property {CharGrid} grid - grid being built.
+	 * Always a cache of puzzle.grid.
 	 */
 	get grid(){return this._grid;}
-	set grid(v){ this.puzzle.grid = this._grid = v }
 
 	/**
 	 * @property {Puzzle} puzzle - puzzle being built.
@@ -123,10 +123,10 @@ export class Builder {
 
 		}
 
-		let grid = new CharGrid( rows, cols );
-		grid.opts = this.opts;
+		this._grid = this.puzzle.initGrid(rows,cols);
+		this._grid.opts = this.opts;
 
-		return grid;
+		return this._grid;
 
 	}
 

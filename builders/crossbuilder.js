@@ -1,6 +1,8 @@
 import { Builder, NoDiagonals } from "./builder";
 import { Crossword } from "../crossword/crossword";
 import { BuildOpts } from "./buildOpts";
+import {  NonWord } from "../util/charutils";
+import { CASE_LOWER, CASE_UPPER } from "../consts";
 
 export class CrossBuilder extends Builder {
 
@@ -28,13 +30,13 @@ export class CrossBuilder extends Builder {
 		clues = clues.concat().sort((a,b)=>a.length-b.length);
 		this.prepareClues( clues, this.opts );
 
-		this.grid = this.createGrid( words );
+		this.createGrid( clues );
 
 		let tries = 40;
 		do {
 
-			this.grid.clearRanges();
-			this._placeClues( words, this.grid );
+			this.grid.clearPlaced();
+			this._placeClues( clues );
 
 		} while ( --tries > 0 );
 
@@ -43,6 +45,26 @@ export class CrossBuilder extends Builder {
 		super.build();
 
 		return this.puzzle;
+
+	}
+
+	/**
+	 * Assign clues numbers based on their positions in the crossword.
+	 * 23D, etc.
+	 */
+	numberClues(){
+
+		let rows = this.grid.rows, cols = this.grid.cols;
+
+		let num = 1;
+
+		for( let r = 0; r < rows; r++ ) {
+
+			for( let c = 0; c < cols; c++ ) {
+
+			}
+
+		}
 
 	}
 

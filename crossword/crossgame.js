@@ -19,6 +19,16 @@ export class CrossGame {
 	}
 
 	/**
+	 * @property {WordSearch} puzzle - wordsearch puzzle.
+	 */
+	get puzzle(){return this._puzzle }
+
+	/**
+	 * @property {WordSearch} grid - wordsearch grid.
+	 */
+	get grid(){return this._puzzle.grid; }
+
+	/**
 	 * @property {string[][]} placed - characters placed in the crossword.
 	 */
 	get placed(){return this._placed; }
@@ -32,11 +42,6 @@ export class CrossGame {
 	set time(v){this._time=v}
 
 	/**
-	 * @property {Crossword} grid - crossword grid.
-	 */
-	get grid(){return this._grid }
-
-	/**
 	 *
 	 * @param {CrossGame|object} [vars=null]
 	 */
@@ -44,13 +49,13 @@ export class CrossGame {
 
 		if ( vars instanceof Crossword ) {
 
-			this._grid = vars;
+			this._puzzle = vars;
 			this.placed = this.makePlaces( vars );
 
 
 		} else {
 
-			this._grid = new Crossword( vars.crossword );
+			this._puzzle = new Crossword( vars.crossword );
 			this.revivePlaced( this._grid, vars.placed );
 
 			time = Number(vars.time||0);

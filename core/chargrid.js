@@ -41,17 +41,17 @@ export class CharGrid {
 	get cols(){return this._cols;}
 	set cols(v){this._cols=v}
 
+
 	/**
-	 * @property {Map<string,string>} ranges - maps range strings to words
-	 * in that range.
-	 * Used to stop repeated words from being placed in the exact same
-	 * location and counting twice. (Can happen on frequent word repeats.)
+	 * @property { (string,number,number,number,number)=>boolean } canPlace - predicate function
+	 * with signature: canPlace( word, row, col, dr, dc )=>boolean
+	 * Determines if a string can be placed in the specific position/orientation.
+	 * Defaults to ()=>true
 	 */
-	get ranges(){return this._ranges;}
+	get canPlace(){return this._canPlace;}
+	set canPlace(v){this._canPlace=v}
 
 	constructor( rows, cols ){
-
-		this._ranges = new Map();
 
 		if ( typeof rows === 'object') {
 
@@ -62,11 +62,11 @@ export class CharGrid {
 			this.makeGrid( rows, cols );
 		}
 
+		if (!this._canPlace) this._canPlace = this.allowPlace;
+
 	}
 
-	clearRanges(){
-		this._ranges.clear();
-	}
+	allowPlace(){return true;}
 
 	/**
 	 * Set the case for all characters in grid.
@@ -276,11 +276,7 @@ export class CharGrid {
 
 		}
 
-		if ( this._ranges.has( RangeKey(r0,c0,endR,endC) )) {
-			return false;
-		}
-
-		return true;
+		return this.canPlace( word, r0, c0, endR, endC );
 
 	}
 
@@ -305,9 +301,7 @@ export class CharGrid {
 		let matches = 0;
 
 		// duplicate word placement. this could be placed outside countMatches() as well.
-		if ( this._ranges.has( RangeKey(r,c,r+len*rDir,c+len*cDir) )) {
-			return -1;
-		}
+		if ( !this.canPlace( word, r,c, rDir, cDir ) ) return -1;
 
 		for( let i = 0; i <= len; i++ ) {
 
@@ -370,8 +364,6 @@ export class CharGrid {
 
 		let len = word.length-1;
 		let a = this._chars;
-
-		this._ranges.set( RangeKey(r,c,r+dr*len,c+dc*len), word );
 
 		for( let i = 0; i <= len; i++ ) {
 

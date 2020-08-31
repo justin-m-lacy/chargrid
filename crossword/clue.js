@@ -25,6 +25,8 @@ export class Clue extends Word {
 
 		super(vars);
 
+		if (!this._word ) this._word = '';
+		if (!this._clue) this._clue = '';
 		// define undefined vars for Vue reactivity.
 		defineVars( this );
 
