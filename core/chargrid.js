@@ -1,5 +1,4 @@
 import {  isEmpty, joinGrid } from "../util/charutils";
-import { RangeKey } from './range';
 import { CASE_LOWER, CASE_UPPER } from "../consts";
 
 
@@ -44,8 +43,8 @@ export class CharGrid {
 
 	/**
 	 * @property { (string,number,number,number,number)=>boolean } canPlace - predicate function
-	 * with signature: canPlace( word, row, col, dr, dc )=>boolean
-	 * Determines if a string can be placed in the specific position/orientation.
+	 * with signature: canPlace( word, row, col, endR, endC )=>boolean
+	 * Determines if a string can be placed in the specific position.
 	 * Defaults to ()=>true
 	 */
 	get canPlace(){return this._canPlace;}
@@ -301,7 +300,7 @@ export class CharGrid {
 		let matches = 0;
 
 		// duplicate word placement. this could be placed outside countMatches() as well.
-		if ( !this.canPlace( word, r,c, rDir, cDir ) ) return -1;
+		if ( !this.canPlace( word, r,c, r+len*rDir, c+len*cDir ) ) return -1;
 
 		for( let i = 0; i <= len; i++ ) {
 

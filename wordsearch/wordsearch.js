@@ -1,4 +1,3 @@
-import {CharGrid} from '../core/chargrid';
 import { SearchOpts } from './searchopts';
 import { Puzzle } from '../core/puzzle';
 import { TYPE_WORDSEARCH } from '../consts';
@@ -66,15 +65,15 @@ export class WordSearch extends Puzzle {
 	setPlace( word, place ) {
 
 		this._words.push(word);
+
 		let len = word.length-1;
 		this._placed.set( RangeKey( place.row, place.col, place.row+len*place.dr, place.col+len*place.dc) );
 
 	}
 
-	canPlace( word, r, c, dr, dc ) {
+	canPlace( word, r, c, endR, endC ) {
 
-		let len = word.length-1;
-		return this._placed.has( RangeKey(r,c, r+len*dr, c+len*dc ) );
+		return this._placed.has( RangeKey(r,c, endR, endC ) );
 	}
 
 	has( w ){ return this.words.includes(w); }
