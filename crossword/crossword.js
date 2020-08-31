@@ -38,6 +38,17 @@ export class Crossword extends Puzzle {
 	}
 
 	/**
+	 *
+	 * @param {number} r
+	 * @param {number} c
+	 * @returns {string|null} character at given location,
+	 * or null if location is not valid.
+	 */
+	charAt( r, c ){
+		return this.grid.getChar(r,c);
+	}
+
+	/**
 	 * TODO: length-1 words.
 	 * @param {string} word
 	 * @param {number} r

@@ -27,7 +27,8 @@ export class CrossBuilder extends Builder {
 		if ( !Array.isArray(clues) ) throw new Error('Clues must be array.');
 
 		// fit large words first.
-		clues = clues.concat().sort((a,b)=>a.length-b.length);
+		clues = clues.concat().sort( (a,b) => a.length-b.length );
+
 		this.prepareClues( clues, this.opts );
 
 		this.createGrid( clues );

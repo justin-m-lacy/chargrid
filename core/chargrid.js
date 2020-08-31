@@ -101,15 +101,17 @@ export class CharGrid {
 
 	}
 
+	/**
+	 *
+	 * @param {number} r
+	 * @param {number} c
+	 * @returns {string|null} character at location, or null for invalid coordinate.
+	 */
 	getChar(r,c) {
 
-		if ( r < 0 || r>= this._rows ) {
-			console.error('Invalid ROW: ' +r);
-			return '';
-		} else if ( c < 0 || c>= this._cols ) {
-			console.error('Invalid COL: ' +c);
-			return '';
-		} else return this._chars[r][c];
+		if ( r < 0 || c < 0 || r >= this._rows || c >= this._cols ) return null;
+
+		return this._chars[r][c];
 
 	}
 

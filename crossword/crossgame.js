@@ -1,5 +1,5 @@
 import {Crossword} from 'crossword';
-import { BLANK_CHAR } from '../consts';
+import { BLANK_CHAR, BLOCK_CHAR } from '../consts';
 import { joinGrid } from '../util/charutils';
 
 /**
@@ -12,7 +12,7 @@ export class CrossGame {
 		return {
 
 			grid:this._grid,
-			placed:joinGrid( this._placed ),
+			entries:joinGrid( this._entries ),
 			time:this.time
 		}
 
@@ -29,10 +29,10 @@ export class CrossGame {
 	get grid(){return this._puzzle.grid; }
 
 	/**
-	 * @property {string[][]} placed - characters placed in the crossword.
+	 * @property {string[][]} entries - characters entered into the crossword by user.
 	 */
-	get placed(){return this._placed; }
-	set placed(v){this._placed = v;}
+	get entries(){return this._entries; }
+	set entries(v){this._entries = v;}
 
 	/**
 	 * @property {number} [time=0] - time taken in millseconds.
@@ -50,13 +50,13 @@ export class CrossGame {
 		if ( vars instanceof Crossword ) {
 
 			this._puzzle = vars;
-			this.placed = this.makePlaces( vars );
+			this.entries = this.makeEntries( vars, this._puzzle.grid );
 
 
 		} else {
 
 			this._puzzle = new Crossword( vars.crossword );
-			this.revivePlaced( this._grid, vars.placed );
+			this.reviveEntries( this._grid, vars.entries );
 
 			time = Number(vars.time||0);
 
@@ -64,15 +64,15 @@ export class CrossGame {
 
 	}
 
-	revivePlaced( grid, placed ) {
+	reviveEntries( grid, entryStr ) {
 
 		let rows = grid.rows;
 		let cols = grid.cols;
 
-		let arr = placed.split('\n');
-		if ( placed.length !== rows ) {
+		let arr = entryStr.split('\n');
+		if ( entryStr.length !== rows ) {
 			console.error('Bad Placed Rows. Expected: ' + rows +
-			'. Got ' + placed.length );
+			'. Got ' + entryStr.length );
 		}
 		for( let r = 0; r < rows; r++ ) {
 
@@ -86,11 +86,16 @@ export class CrossGame {
 
 		}
 
-		this.placed = arr;
+		this.entries = arr;
 
 	}
 
-	makePlaces( grid ){
+	/**
+	 * Initialize entry guesses with blank spaces.
+	 * @param {*} grid
+	 * @param {CharGrid} original - original grid.
+	 */
+	makeEntries( grid, original ){
 
 		let rows = grid.rows;
 		let cols = grid.cols;
@@ -102,7 +107,8 @@ export class CrossGame {
 			let sub = arr[r] = new Array(cols);
 			for( let c = 0; c < cols; c++ ) {
 
-				sub[c] = BLANK_CHAR;
+				if ( original.getChar(r,c) === BLOCK_CHAR ) sub[c] = BLOCK_CHAR;
+				else sub[c] = BLANK_CHAR;
 			}
 
 		}

@@ -83,6 +83,7 @@ export class Puzzle {
 		this.created = 0;
 		this.id = null;
 		this.url = null;
+		this._grid = null;	//reactivity.
 
 		defineVars( this );
 

@@ -1,3 +1,5 @@
+import { BLOCK_CHAR } from "../consts";
+
 /**
  * @const {RegExp} NonWord - matches nonword characters.
  */
@@ -24,7 +26,7 @@ export function longest( words ) {
 }
 
 export function isEmpty(c) {
-	return c == null || c === '' || c === ' ';
+	return c == null || c === '' || c === BLOCK_CHAR;
 }
 
 
