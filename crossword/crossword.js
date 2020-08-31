@@ -31,6 +31,10 @@ export class Crossword extends Puzzle {
 		this.allowDiagonal = false;
 		this.allowReverse = false;
 
+		this._down = [];
+		this._across = [];
+		this._clues = [];
+
 	}
 
 	/**
@@ -49,7 +53,7 @@ export class Crossword extends Puzzle {
 		 * Across is the fallback so edge-case 1-length words are considered
 		 * 'across' not 'down'
 		 */
-		if ( dr !== 0 ) {
+		if ( r !== endR ) {
 			return this.canPlaceDown( c, r, endR );
 
 		} else {

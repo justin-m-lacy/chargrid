@@ -35,7 +35,7 @@ export class CrossBuilder extends Builder {
 		let tries = 40;
 		do {
 
-			this.grid.clearPlaced();
+			this.puzzle.clearPlaced();
 			this._placeClues( clues );
 
 		} while ( --tries > 0 );
