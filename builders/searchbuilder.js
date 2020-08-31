@@ -90,7 +90,6 @@ export class SearchBuilder extends Builder {
 			} else {
 
 				this._puzzle.setPlace( w, place );
-				words.push( w );
 
 			}
 		}

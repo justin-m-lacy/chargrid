@@ -62,6 +62,7 @@ export class WordSearch extends Puzzle {
 
 
 	}
+
 	setPlace( word, place ) {
 
 		this._words.push(word);

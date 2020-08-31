@@ -34,7 +34,7 @@ export class Crossword extends Puzzle {
 	}
 
 	/**
-	 *
+	 * TODO: length-1 words.
 	 * @param {string} word
 	 * @param {number} r
 	 * @param {number} c
@@ -115,13 +115,53 @@ export class Crossword extends Puzzle {
 
 	}
 
-	insertAcross( clue, place ){
+	setPlace( clue, place ) {
+
+		if ( place.dc !== 0 ) {
+			this.insertAcross(clue);
+		} else this.insertDown(clue);
+
+	}
+
+	/**
+	 * Insert a clue in the 'across' list.
+	 * Does not check or guard against overlaps.
+	 * @param {Clue} clue
+	 */
+	insertAcross( clue ){
 
 		let a = this._across;
-		let len = a.length;
+
+		let r = clue.row;
 		for( let i = a.length-1; i >= 0; i-- ) {
 
+			let cur = a[i];
+			if ( cur.row > r ) continue;
+			else if ( cur.row === r && cur.col >= clue.col ) continue;
 
+			a.splice( i, 0, clue );
+
+		}
+
+	}
+
+	/**
+	 * Insert a clue in the 'down' list.
+	 * Does not check or guard against overlaps.
+	 * @param {Clue} clue
+	 */
+	insertDown( clue ){
+
+		let a = this._down;
+
+		let c = clue.col;
+		for( let i = a.length-1; i >= 0; i-- ) {
+
+			let cur = a[i];
+			if ( cur.col > c ) continue;
+			else if ( cur.col === c && cur.row >= clue.row ) continue;
+
+			a.splice( i, 0, clue );
 
 		}
 
