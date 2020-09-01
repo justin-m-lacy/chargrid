@@ -13,7 +13,7 @@ export const BLANK_CHAR = ' ';
  * @const {char} BLOCK_CHAR - Blocked space on a crossword.
  * Using 'end of transmission' character, which should be harmless?
  */
-export const BLOCK_CHAR = '\004';
+export const BLOCK_CHAR = '\u0004';
 
 /**
  * @const {number} REVERSE_RATE - odds of reversing string.

@@ -76,7 +76,7 @@ export class WordSearch extends Puzzle {
 		this._words.push(word);
 
 		let len = word.length-1;
-		this._placed.set( RangeKey( place.row, place.col, place.row+len*place.dr, place.col+len*place.dc) );
+		this._placed.set( RangeKey( place.row, place.col, place.row+len*place.dr, place.col+len*place.dc), word );
 
 	}
 

@@ -8,7 +8,6 @@ export class CharGrid {
 
 		return {
 
-			title:this.title||undefined,
 			chars:joinGrid(this.chars),
 			opts:this.opts||undefined
 

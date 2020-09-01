@@ -73,6 +73,7 @@ export class Builder {
 
 		this.opts = opts || new BuildOpts();
 
+		this.unused = null;
 		this._built = false;
 		this.puzzle = puzzle;
 
@@ -191,9 +192,11 @@ export class Builder {
 		else if ( dc < 0 ) minCol += word.length - 1;
 
 		// random start position.
-		let r = randInt( minRow, maxRow ), c = rand( minCol, maxCol );
+		let r = randInt( minRow, maxRow ), c = randInt( minCol, maxCol );
 
 		let maxTries = (maxRow-minRow)*(maxCol-minCol );
+		/*console.log( word + ' max: ' + maxTries +
+			' rows: ' + minRow+'->'+maxRow+'  cols: ' + minCol+'->'+maxCol);*/
 
 		while( maxTries-- > 0 ) {
 

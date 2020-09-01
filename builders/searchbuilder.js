@@ -10,8 +10,6 @@ export class SearchBuilder extends Builder {
 
 		super( opts || new SearchOpts(), puzzle || new WordSearch() );
 
-		this.unused=[];
-
 	}
 
 	/**
@@ -92,6 +90,7 @@ export class SearchBuilder extends Builder {
 			if ( place === null ) {
 				unused.push( w );
 			} else {
+				console.log('place: ' + place.row + ',' + place.col );
 				this._puzzle.placeItem( w, place );
 
 			}
