@@ -3,7 +3,6 @@ import { BLANK_CHAR, CASE_LOWER, CASE_UPPER } from "../consts";
 import { longest, isEmpty } from "../util/charutils";
 import { rand, randInt } from "../util/util";
 import { BuildOpts } from "./buildOpts";
-import { CharGrid } from "../core/chargrid";
 import { Placement } from "../core/placement";
 
 export const NoDiagonals = [

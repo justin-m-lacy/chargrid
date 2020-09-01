@@ -1,4 +1,4 @@
-import {Crossword} from 'crossword';
+import {Crossword} from './crossword';
 import { BLANK_CHAR, BLOCK_CHAR } from '../consts';
 import { joinGrid } from '../util/charutils';
 

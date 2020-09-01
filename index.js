@@ -14,3 +14,4 @@ export {SearchBuilder} from './builders/searchbuilder';
 export {CrossBuilder} from './builders/crossbuilder';
 export {Clue} from './crossword/clue';
 export {Crossword} from './crossword/crossword';
+export {CrossGame} from './crossword/crossgame';

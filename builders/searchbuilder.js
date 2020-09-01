@@ -90,7 +90,7 @@ export class SearchBuilder extends Builder {
 			if ( place === null ) {
 				unused.push( w );
 			} else {
-				console.log('place: ' + place.row + ',' + place.col );
+				//console.log('place: ' + place.row + ',' + place.col );
 				this._puzzle.placeItem( w, place );
 
 			}
