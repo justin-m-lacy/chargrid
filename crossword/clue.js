@@ -1,5 +1,5 @@
 import { Word } from "../word";
-import { DIR_ACROSS } from "../consts";
+import { DIR_ACROSS, DIR_DOWN } from "../consts";
 import {defineVars} from 'objecty';
 
 export class Clue extends Word {
@@ -10,8 +10,8 @@ export class Clue extends Word {
 	get num(){return this._num;}
 	set num(v){this._num = v;}
 
-	get clue(){return this._clue; }
-	set clue(v){this._clue=v}
+	get text(){return this._text; }
+	set text(v){this._text=v}
 
 	/**
 	 * @property {across|down} direction
@@ -19,14 +19,14 @@ export class Clue extends Word {
 	get direction(){ return this._dir }
 	set direction(v){ this._dir=v; }
 
-	get id(){return this._num + ( this._dir === DIR_ACROSS ? 'A' : 'D' ); }
+	get id(){ return this._num + ( this._dir === DIR_ACROSS ? 'A' : 'D' ); }
 
 	constructor( vars=null ){
 
 		super(vars);
 
 		if (!this._word ) this._word = '';
-		if (!this._clue) this._clue = '';
+		if (!this._text) this._text = '';
 		// define undefined vars for Vue reactivity.
 		defineVars( this );
 

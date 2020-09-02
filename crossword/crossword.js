@@ -1,4 +1,5 @@
 import { Puzzle } from "../core/puzzle";
+import { DIR_DOWN, DIR_ACROSS } from "../consts";
 
 export class Crossword extends Puzzle {
 
@@ -49,18 +50,30 @@ export class Crossword extends Puzzle {
 
 		super.revive(obj);
 
-		let across = vars.across;
-		for( let i = 0; i < across.length; i++ ) {
-			across[i] = new Clue(across[i]);
-		}
-		for( let i = 0; i < down.length;i++){
-			down[i] = new Clue(down[i]);
+		if ( vars.clues ) {
+
+			let clues = vars.clues;
+			this.clues = [];
+
+			for( let i = this.clues.length-1; i>=0; i--) {
+
+				let cl = new Clue( clues[i] );
+				if ( cl.direction === DIR_DOWN ) this.insertDown(cl);
+				else this.insertAcross(cl);
+
+				this.clues.push(cl);
+
+			}
+
+		} else {
+
+			this.across = vars.across.map(v=>new Clue(v));
+			this.down = vars.down.map(v=>new Clue(v));
+
+			this.clues = this.across.concat( this.down );
+
 		}
 
-		this.across = across;
-		this.down = down;
-
-		this.clues = across.concat( down );
 		this.sortClues();
 
 	}
@@ -214,12 +227,12 @@ export class Crossword extends Puzzle {
 
 		if ( place.dr !== 0 ) {
 
-			clue.direction = 'down';
+			clue.direction = DIR_DOWN;
 			this.insertDown(clue);
 
 		} else {
 
-			clue.direction = 'across';
+			clue.direction = DIR_ACROSS;
 			this.insertAcross(clue);
 		}
 

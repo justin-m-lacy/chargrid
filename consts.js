@@ -23,5 +23,5 @@ export const REVERSE_RATE = 0.4;
 export const LowerChars = 'abcdefghijklmnopqrstuvwxyz';
 
 
-export const DIR_ACROSS = 'across';
-export const DIR_DOWN = 'down';
+export const DIR_ACROSS = 'a';
+export const DIR_DOWN = 'd';
