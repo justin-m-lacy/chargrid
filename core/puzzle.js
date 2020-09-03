@@ -6,7 +6,7 @@ import { CharGrid } from './chargrid';
  */
 export class Puzzle {
 
-	toString(){ return 'untitled'; }
+	toString(){ return this.id||this.title||'untitled'; }
 
 	toJSON(){
 
